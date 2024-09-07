@@ -1,6 +1,7 @@
 import { Menu, Search, ToggleRightIcon } from "lucide-react";
 import { useState } from "react";
 import Login from "../Pages/Login";
+import BestSeller from "../Pages/BestSeller";
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeLink, setActiveLink] = useState("home");
@@ -53,8 +54,8 @@ function Navbar() {
             BEST SELLER
           </a>
           <a
-            href="#"
-            onClick={() => setActiveLink("contact")}
+            href=""
+            onClick={() => setActiveLink("bestseller")}
             className={`text-white px-3 py-2 ${
               activeLink === "contact"
                 ? "border-b-2 border-yellow-400"
