@@ -1,7 +1,7 @@
-import { Menu, Search, ToggleRightIcon } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 import { useState } from "react";
-import Login from "../Pages/Login";
-import BestSeller from "../Pages/BestSeller";
+import { Link } from "react-router-dom"; // Sử dụng Link từ react-router-dom
+
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeLink, setActiveLink] = useState("home");
@@ -18,10 +18,9 @@ function Navbar() {
           </button>
         </div>
 
-        {/* Navigation links for large screens */}
         <div className="hidden md:flex space-x-4 mb-2">
-          <a
-            href="#"
+          <Link
+            to="/"
             onClick={() => setActiveLink("home")}
             className={`text-white px-3 py-2 ${
               activeLink === "home"
@@ -30,9 +29,9 @@ function Navbar() {
             }`}
           >
             TRANG CHỦ
-          </a>
-          <a
-            href="#"
+          </Link>
+          <Link
+            to="/about"
             onClick={() => setActiveLink("about")}
             className={`text-white px-3 py-2 ${
               activeLink === "about"
@@ -41,42 +40,42 @@ function Navbar() {
             }`}
           >
             SẢN PHẨM
-          </a>
-          <a
-            href="#"
-            onClick={() => setActiveLink("services")}
+          </Link>
+          <Link
+            to="/bestseller"
+            onClick={() => setActiveLink("bestseller")}
             className={`text-white px-3 py-2 ${
-              activeLink === "services"
+              activeLink === "bestseller"
                 ? "border-b-2 border-yellow-400"
                 : "hover:bg-blue-700"
             }`}
           >
             BEST SELLER
-          </a>
-          <a
-            href=""
-            onClick={() => setActiveLink("bestseller")}
+          </Link>
+          <Link
+            to="/saleoff"
+            onClick={() => setActiveLink("saleoff")}
             className={`text-white px-3 py-2 ${
-              activeLink === "contact"
+              activeLink === "saleoff"
                 ? "border-b-2 border-yellow-400"
                 : "hover:bg-blue-700"
             }`}
           >
             SALE OFF
-          </a>
-          <a
-            href="#"
-            onClick={() => setActiveLink("contact")}
+          </Link>
+          <Link
+            to="/blog"
+            onClick={() => setActiveLink("blog")}
             className={`text-white px-3 py-2 ${
-              activeLink === "contact"
+              activeLink === "blog"
                 ? "border-b-2 border-yellow-400"
                 : "hover:bg-blue-700"
             }`}
           >
             BLOG
-          </a>
-          <a
-            href="/login"
+          </Link>
+          <Link
+            to="/login"
             onClick={() => setActiveLink("login")}
             className={`text-white px-3 py-2 ${
               activeLink === "login"
@@ -85,85 +84,76 @@ function Navbar() {
             }`}
           >
             SIGN UP
-          </a>
+          </Link>
         </div>
 
         {/* Slide-out menu for small screens */}
         <div
-          className={`fixed top-0 left-0 w-64 h-full bg-[#333333]  z-50 transform ${
+          className={`fixed top-0 left-0 w-64 h-full bg-[#333333] z-50 transform ${
             menuOpen ? "translate-x-0" : "-translate-x-full"
           } transition-transform duration-300 ease-in-out md:hidden`}
         >
-          <div className=" px-3 py-2 mb-4 text-right">
-            <button onClick={() => setMenuOpen(false)} className="text-white ">
+          <div className="px-3 py-2 mb-4 text-right">
+            <button onClick={() => setMenuOpen(false)} className="text-white">
               ✖
             </button>
           </div>
-          <div className=" bg-[#333333] mb-[5%] ml-[5%] flex items-center border rounded-sm border-gray-500 w-[80%]">
+          <div className="bg-[#333333] mb-[5%] ml-[5%] flex items-center border rounded-sm border-gray-500 w-[80%]">
             <button className="w-50% h-full bg-yellow-600 text-white">
               <Search />
             </button>
             <input
-              className=" w-80 pl-1 bg-[#333333] border-none focus:outline-none  placeholder-gray-500 text-white"
+              className="w-80 pl-1 bg-[#333333] border-none focus:outline-none placeholder-gray-500 text-white"
               type="text"
               placeholder="Tìm sản phẩm..."
             />
           </div>
           <nav className="flex flex-col space-y-4 text-white">
-            <a
-              href="#"
+            <Link
+              to="/"
               onClick={() => setActiveLink("home")}
               className={`text-white border-item px-3 py-2 ${
                 activeLink === "home" ? "text-yellow-700" : ""
               }`}
             >
               TRANG CHỦ
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/about"
               onClick={() => setActiveLink("about")}
               className={`text-white border-item px-3 py-2 ${
                 activeLink === "about" ? "text-yellow-700" : ""
               }`}
             >
               NEW
-            </a>
-            <a
-              href="#"
-              onClick={() => setActiveLink("services")}
+            </Link>
+            <Link
+              to="/bestseller"
+              onClick={() => setActiveLink("bestseller")}
               className={`text-white border-item px-3 py-2 ${
-                activeLink === "services" ? "text-yellow-700" : ""
-              }`}
-            >
-              SẢN PHẨM
-            </a>
-            <a
-              href="#"
-              onClick={() => setActiveLink("contact")}
-              className={`text-white border-item px-3 py-2 ${
-                activeLink === "contact" ? "text-yellow-700" : ""
+                activeLink === "bestseller" ? "text-yellow-700" : ""
               }`}
             >
               BEST SELLER
-            </a>
-            <a
-              href="#"
-              onClick={() => setActiveLink("se")}
+            </Link>
+            <Link
+              to="/saleoff"
+              onClick={() => setActiveLink("saleoff")}
               className={`text-white border-item px-3 py-2 ${
-                activeLink === "contact" ? "text-yellow-700" : ""
+                activeLink === "saleoff" ? "text-yellow-700" : ""
               }`}
             >
               SALE OFF
-            </a>
-            <a
-              href="#"
-              onClick={() => setActiveLink("contact")}
+            </Link>
+            <Link
+              to="/blog"
+              onClick={() => setActiveLink("blog")}
               className={`text-white border-item px-3 py-2 ${
-                activeLink === "contact" ? "text-yellow-700" : ""
+                activeLink === "blog" ? "text-yellow-700" : ""
               }`}
             >
               BLOG
-            </a>
+            </Link>
           </nav>
         </div>
 
