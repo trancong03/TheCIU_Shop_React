@@ -20,7 +20,7 @@ function App() {
       
       <BrowserRouter>
         <Routes>
-          <Route path="/Dang-Nhap" element={<DN />} />
+          <Route path="/login" element={<DN />} />
           <Route path="/" element={<Home/>}/>
           <Route path="*" element={<ErrorPage />} />
         </Routes>

@@ -15,7 +15,7 @@ export default function CartItem({ name, price, images = [] }) {
                     {
                         images.map((image, index) => (
                            <button>
-                                <img className='w-[3rem] h-[3rem] rounded-md' key={index} src={`image/${image}`} alt={name} />
+                                <img className='w-[3rem] h-[3rem] rounded-md' key={index} src={`image/${image[0]}`} alt="" />
                            </button> 
                         ))
                     }
