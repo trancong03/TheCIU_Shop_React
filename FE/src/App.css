@@ -6,11 +6,12 @@ html,
 body {
   position: relative;
   height: 100%;
+  font-family: "Mulish", sans-serif;
 }
 
 body {
   background: #eee;
-  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-family: "Mulish";
   font-size: 14px;
   color: #000;
   margin: 0;
@@ -39,6 +40,6 @@ body {
   height: 100%;
   object-fit: cover;
 }
-.border-item{
-  border-bottom: 1px solid slategray ;
+.border-item {
+  border-bottom: 1px solid slategray;
 }
