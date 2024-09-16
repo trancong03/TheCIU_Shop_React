@@ -40,5 +40,11 @@
         "name": "Quần jean ống rộng THE C.I.U - Wide Leg Jeans - 122308",
         "price": 350000,
         "images": ["qJeans1.webp", "qJeans11.webp", "qJeans12.webp"]
+    },
+    {
+        "id": 1,
+        "name": "Áo sơ mi cổ tàu tay ngắn dáng babydoll THE C.I.U - Neema Top",
+        "price": 275000,
+        "images": ["Aosomi.webp", "Aosomi1.webp", "Aosomi2.webp"]
     }
 ]
