@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <div className=" bg-white">
       <Banner />
-      <div className="grid grid-cols-4 m-[5%]">
+      <div className="grid grid-cols-4 mt-[5%] mx-[5%]">
         {listProduct.map((product) => {
           return (
             
