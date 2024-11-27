@@ -1,9 +1,40 @@
 import { Menu, Search, ToggleRightIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeLink, setActiveLink] = useState("home");
+  const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/get_all_category/', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setCategories(data.category);
+        console.log('Categories:', data.category);
+      } else {
+        const errorData = await response.json();
+        console.log('Error:', errorData.message);
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+    }
+  };
+  useEffect(() => {
+    fetchCategories(); 
+  }, []);
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false); 
+  const handleCategoryClick = (event, category) => {
+    event.preventDefault(); 
+    navigate(`/products/${category.CategoryID}`); 
+  };
   return (
     <nav className="bg-white">
       <div className="container flex justify-between items-center">
@@ -15,11 +46,9 @@ function Navbar() {
             <Menu />
           </button>
         </div>
-
-        {/* Navigation links for large screens */}
         <div className="hidden md:flex space-x-4 mb-2 gap-8 w-[60vw] ml-[20vw] justify-between">
           <a
-            href="#"
+            href="/"
             onClick={() => setActiveLink("home")}
             className={`text-[#5b5858cc] text-lg font-arial font-bold px-3 py-2 ${
               activeLink === "home"
@@ -39,17 +68,33 @@ function Navbar() {
           >
             Collection
           </a>
-          <a
-            href="#"
-            onClick={() => setActiveLink("product")}
-            className={`text-[#5b5858cc] text-lg font-arial font-bold px-3 py-2 ${
-              activeLink === "product"
-                ? "text-black"
-                : "hover:text-black"
-            }`}
-          >
-            Sản Phẩm
-          </a>
+          <nav className="relative">
+            <a
+              onClick={() => setIsCategoryOpen(!isCategoryOpen)} // Toggle danh sách category
+              className={`text-[#5b5858cc] text-lg font-arial font-bold ${isCategoryOpen ? "text-black" : "hover:text-black"}`}
+            >
+              <h1 className="mt-2"> Sản Phẩm</h1>
+            </a>
+            {isCategoryOpen && (
+              <ul className="absolute bg-white border border-gray-200 rounded shadow-md w-80 z-50 transition-all duration-300 ease-in-out mt-2 top-full">
+                {categories.map((category, index) => (
+                  <li key={index} className="list-none">
+                    <a
+                      onClick={(event) => {
+                        event.preventDefault(); // Ngăn chặn hành động mặc định
+                        setActiveLink(category.Name); // Cập nhật activeLink
+                        handleCategoryClick(event, category); // Gọi hàm điều hướng
+                      }}
+                      className={`block text-[#5b5858cc] text-lg font-arial font-bold px-4 py-3 transition-colors duration-200 ease-in-out hover:bg-gray-100 hover:text-black ${activeLink === category.Name ? "bg-gray-100 text-black" : ""}`}
+                    >
+                      {category.Name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </nav>
+
           <a
             href="#"
             onClick={() => setActiveLink("services")}

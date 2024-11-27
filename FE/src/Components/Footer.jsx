@@ -15,10 +15,10 @@ import {
 const Footer = () => {
   return (
     <div className="bg-black text-white">
-      <div className="flex flex-col sm:grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-14 my-20 mt-40 text-sm ml-5 mr-2">
+      <div className="flex flex-col sm:grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-14 text-sm ml-5 mr-2">
         <div className="mt-10">
           <img
-            src="https://theciu.vn/img/logo-white.png"
+            src="image/logo.png"
             alt=""
             className="mb-5 w-32"
           />
@@ -42,7 +42,7 @@ const Footer = () => {
           <p className="text-xl font-medium mb-5">MEMBER</p>
           <ul className="flex flex-col gap-1 text-gray-400">
             <li>Trần Chí Công</li>
-            <li>Phạm Hồ Đăng Huy</li>
+            <li>Hoàng Phi Hùng</li>
             <li>Nguyễn Thị Hằng</li>
           </ul>
         </div>
@@ -87,7 +87,7 @@ const Footer = () => {
       </div>
       <div className="flex flex-col items-center">
         <img
-          src="https://theciu.vn/img/logo-white.png"
+          src="image/logo.png"
           alt=""
           className="h-12 sm:h-8 md:h-10 lg:h-16 w-auto"
         />

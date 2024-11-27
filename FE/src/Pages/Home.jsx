@@ -1,35 +1,19 @@
 import React, { useEffect, useState } from "react";
 import Banner from "../Components/Banner";
-import CartItem from "../Components/ui/cartItem";
-
-
+import Product_list from "../Components/ui_product/product_list";
 export default function Home() {
   const [listProduct, setlistProduct] = useState([]);
-
   useEffect(() => {
-    fetch("/src/data.json")
-      .then((response) => response.json())
-      .then((data) => setlistProduct(data));
+    fetch('http://127.0.0.1:8000/api/product/')
+      .then(response => response.json())
+      .then(data => setlistProduct(data.product))
+      .catch(error => console.error('Error fetching data:', error));
   }, []);
-  
+  const productsBanner = [...listProduct];
   return (
     <div className=" bg-white">
-      <Banner />
-      <div className="grid grid-cols-4 m-[5%]">
-        {listProduct.map((product) => {
-          return (
-            
-            <CartItem 
-            
-              key={product.id}
-              name={product.name}
-              price={product.price}
-              images={product.images || []}
-            />
-          );
-        })}
-      </div>
-
+      <Banner products={productsBanner.sort(() => Math.random() - 0.5).slice(0, 10)} />
+      <Product_list listProduct={listProduct}/>
     </div>
   );
 }
