@@ -1,28 +1,17 @@
-# import logging
-# from ..utils.db import execute_query
-# import logging
-# from users.models import BaiViet,YeuThich
+import logging
+from ..utils.db import execute_query
+import logging
+from users.models import Product
 
-# class PostRepository:
-#     @staticmethod
-#     def get_all_bai_viet():
-#         query = """
-#         SELECT dbo.LayDanhSachBaiViet()
-#         """
-#         try:
-#             # Execute the query and retrieve results
-#             query_result = execute_query(query)
-            
-#             # Check if the result is valid
-#             if query_result and isinstance(query_result, list):
-#                 return query_result
-#             else:
-#                 return None  # If no valid result found
+class ProductRepository:
+    @staticmethod
+    def get_all_product():
+        try:
+            accounts = Product.objects.all()
+            return accounts
+        except Product.DoesNotExist:
+            return None
         
-#         except Exception as e:
-#             # Log the error for debugging purposes
-#             logging.error(f"Error while fetching bai viet: {e}")
-#             return None
 #     @staticmethod
 #     def get_all_bai_viet_by_manguoidung(manguoidung):
 #         query = """
@@ -65,7 +54,7 @@
 #             logging.error(f"Error while fetching bai viet: {e}")
 #             return None   
 #     @staticmethod
-#     def get_post_by_id(id):
+#     def get_Product_by_id(id):
 #         try:
 #             return BaiViet.objects.get(mabaiviet=id)
 #         except BaiViet.DoesNotExist:

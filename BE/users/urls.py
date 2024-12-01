@@ -1,5 +1,5 @@
 from django.urls import path
-from users.views import user , post
+from users.views import user , Product
 from . import views1
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -16,19 +16,20 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('scan-cccd/', views1.scan_cccd, name='scan_cccd'),
     path('user/<str:username>/', user.get_user, name='get_user'),
-    # path('bai-viet/', post.get_all_bai_viet, name='get_all_bai_viet'),
-    
-    # path('new-post/', post.tao_bai_viet, name='tao_bai_viet'),
-    # path('update-post/', post.sua_bai_viet, name='sua_bai_viet'),
+
+
+    path('product/', Product.get_all_product, name='get_all_product'),
+    # path('new-Product/', Product.tao_bai_viet, name='tao_bai_viet'),
+    # path('update-Product/', Product.sua_bai_viet, name='sua_bai_viet'),
    
-    # path('delete-post/<int:id>/', post.xoa_bai_viet, name='xoa_bai_viet'),
-    # path('post-id/<int:id>/', post.get_post_by_id, name='get_post_by_id'),
-    # path('post-like/<int:iduser>/', post.get_all_bai_viet_like, name='get_all_bai_viet_like'),
-    # path('post/<int:iduser>/', post.get_all_bai_viet_by_manguoidung, name='get_all_bai_viet_by_manguoidung'),
+    # path('delete-Product/<int:id>/', Product.xoa_bai_viet, name='xoa_bai_viet'),
+    # path('Product-id/<int:id>/', Product.get_Product_by_id, name='get_Product_by_id'),
+    # path('Product-like/<int:iduser>/', Product.get_all_bai_viet_like, name='get_all_bai_viet_like'),
+    # path('Product/<int:iduser>/', Product.get_all_bai_viet_by_manguoidung, name='get_all_bai_viet_by_manguoidung'),
     
 
-    # path('like-post/', post.them_yeu_thich, name='them_yeu_thich'),
-    # path('islike-post/', post.kiem_tra_yeu_thich, name='them_yeu_thich'),
-    # path('get-like-post/<int:iduser>/', post.lay_list_yeu_thich, name='lay_list_yeu_thich'),
-    # path('remove-like-post/', post.xoa_yeu_thich, name='them_yeu_thich'),
+    # path('like-Product/', Product.them_yeu_thich, name='them_yeu_thich'),
+    # path('islike-Product/', Product.kiem_tra_yeu_thich, name='them_yeu_thich'),
+    # path('get-like-Product/<int:iduser>/', Product.lay_list_yeu_thich, name='lay_list_yeu_thich'),
+    # path('remove-like-Product/', Product.xoa_yeu_thich, name='them_yeu_thich'),
 ]

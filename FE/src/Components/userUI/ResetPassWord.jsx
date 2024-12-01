@@ -42,8 +42,9 @@ export default function ResetPassWord({user}) {
     };
 
     return (
-        <div className='max-w-[40vw]'>
-            <h2 className="text-2xl font-bold mb-6">Thay đổi mật khẩu</h2>
+        <div className="flex flex-col lg:flex-row p-6 lg:p-12 gap-6 bg-white min-h-screen max-w-screen">
+            <div className="flex-1 bg-white shadow-md rounded-lg p-6 h-fit">
+                <h2 className="text-2xl font-bold mb-4 text-gray-700">Hồ sơ cá nhân</h2>
             <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="current-password">
@@ -97,6 +98,7 @@ export default function ResetPassWord({user}) {
             <p className="block text-xs text-gray-500 mt-1">
                 Mật khẩu sau khi được cập nhật sẽ không thể thay đổi trong vòng 60 ngày tới.
             </p>
+        </div>
         </div>
     );
 }

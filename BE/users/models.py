@@ -92,10 +92,10 @@ class Product(models.Model):
     product_name = models.CharField(max_length=255)
     title = models.TextField(null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    category_id = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category_id = models.TextField(null=True, blank=True)
     imageSP = models.URLField(null=True, blank=True)
     rating = models.FloatField(default=0)
-    dateadd = models.DateTimeField(auto_now_add=True)
+    dateadd = models.DateField(auto_now_add=True)
 
     class Meta:
         db_table = 'products'
