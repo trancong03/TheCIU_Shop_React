@@ -138,6 +138,49 @@ def update_user(request, username):
     return JsonResponse(serializer.data, status=200)
 
 
+
+@csrf_exempt
+def reset_password_forgot(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('email')
+        new_password = data.get('newPassword')
+        UserService.reset_password_forgot(email, new_password)
+        return JsonResponse({'success': True, 'message': 'Mật khẩu đã được thay đổi thành công.'})
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
+@csrf_exempt
+def forgot_password(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('email')
+        user = UserService.get_user_by_email(email)
+        if not user:
+            return JsonResponse({'error': 'Email không hợp lệ'}, status=404)
+
+        otp = random.randint(100000, 999999)  # OTP 6 chữ số
+        UserService.save_otp(email, otp)
+        subject = 'Mã OTP xác thực'
+        message = f'Mã OTP của bạn là: {otp}\n\nVui lòng nhập mã này để xác thực.'
+        from_email = settings.DEFAULT_FROM_EMAIL
+
+        try:
+            send_mail(subject, message, from_email, [email])
+            return JsonResponse({'success': True, 'message': 'Mã OTP đã được gửi đến email của bạn.'}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': f'Có lỗi xảy ra khi gửi OTP: {str(e)}'}, status=500)
+
+    return JsonResponse({'error': 'Phương thức không hợp lệ'}, status=405)
+@csrf_exempt
+def verify_otp(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('email')
+        otp = data.get('otp')
+        
+        if UserService.check_otp(email,otp):
+            return JsonResponse({'message': 'OTP hợp lệ.'}, status=200)
+        return JsonResponse({'error': 'OTP không hợp lệ.'}, status=400)
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
 # @csrf_exempt
 # @require_http_methods(['POST'])
 # def update_user_images(request):
@@ -166,46 +209,4 @@ def update_user(request, username):
 #             return JsonResponse({'error': 'User not found'}, status=404)
 #         UserService.reset_password(user, hashed_password)
 #         return JsonResponse({'success': True, 'message': 'Mật khẩu đã được thay đổi thành công.'})
-#     return JsonResponse({'error': 'Method not allowed'}, status=405)
-# @csrf_exempt
-# def reset_password_forgot(request):
-#     if request.method == 'POST':
-#         data = json.loads(request.body)
-#         email = data.get('email')
-#         new_password = data.get('newPassword')
-#         UserService.reset_password_forgot(email, new_password)
-#         return JsonResponse({'success': True, 'message': 'Mật khẩu đã được thay đổi thành công.'})
-#     return JsonResponse({'error': 'Method not allowed'}, status=405)
-# @csrf_exempt
-# def forgot_password(request):
-#     if request.method == 'POST':
-#         data = json.loads(request.body)
-#         email = data.get('email')
-#         user = UserService.get_user_by_email(email)
-#         if not user:
-#             return JsonResponse({'error': 'Email không hợp lệ'}, status=404)
-
-#         otp = random.randint(100000, 999999)  # OTP 6 chữ số
-#         UserService.save_otp(email, otp)
-#         subject = 'Mã OTP xác thực'
-#         message = f'Mã OTP của bạn là: {otp}\n\nVui lòng nhập mã này để xác thực.'
-#         from_email = settings.DEFAULT_FROM_EMAIL
-
-#         try:
-#             send_mail(subject, message, from_email, [email])
-#             return JsonResponse({'success': True, 'message': 'Mã OTP đã được gửi đến email của bạn.'}, status=200)
-#         except Exception as e:
-#             return JsonResponse({'error': f'Có lỗi xảy ra khi gửi OTP: {str(e)}'}, status=500)
-
-#     return JsonResponse({'error': 'Phương thức không hợp lệ'}, status=405)
-# @csrf_exempt
-# def verify_otp(request):
-#     if request.method == 'POST':
-#         data = json.loads(request.body)
-#         email = data.get('email')
-#         otp = data.get('otp')
-        
-#         if UserService.check_otp(email,otp):
-#             return JsonResponse({'message': 'OTP hợp lệ.'}, status=200)
-#         return JsonResponse({'error': 'OTP không hợp lệ.'}, status=400)
 #     return JsonResponse({'error': 'Method not allowed'}, status=405)

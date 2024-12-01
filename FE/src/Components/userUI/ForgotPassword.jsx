@@ -19,9 +19,7 @@ const ForgotPassword = ({ closeForgotPassword }) => {
             setError('Vui lòng nhập email');
             return;
         }
-
         setLoading(true); // Bắt đầu trạng thái tải
-
         try {
             const response = await apiClient.post('/api/forgot-password/', { email });
             setLoading(false); // Kết thúc trạng thái tải

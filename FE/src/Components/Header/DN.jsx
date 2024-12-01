@@ -89,7 +89,6 @@ const DN = ({ closeLogin, onLoginSuccess, onForgotPassword }) => {
 
             const data = await response.json();
             alert(data.message);
-            // Có thể chuyển hướng đến trang đăng nhập hoặc làm gì đó sau khi đăng ký thành công
         } catch (err) {
             setError(err.message);
         }

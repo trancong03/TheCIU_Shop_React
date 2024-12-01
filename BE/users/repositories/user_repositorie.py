@@ -17,12 +17,12 @@ class UserRepository:
         user.birthday = data.get('birthday', user.birthday)
         user.save()
         return user
-#     @staticmethod
-#     def get_user_by_email(email):
-#         try:
-#             return NguoiDung.objects.get(email=email)
-#         except NguoiDung.DoesNotExist:
-#             return None
+    @staticmethod
+    def get_user_by_email(email):
+        try:
+            return Account.objects.get(email=email)
+        except Account.DoesNotExist:
+            return None
 #     @staticmethod
 #     def login(username, password):
 #         try:
@@ -42,11 +42,11 @@ class UserRepository:
 #         user.ngaysinh = data.get('ngaysinh', user.ngaysinh)
 #         user.save()
 #         return user
-#     @staticmethod
-#     def reset_password_forgot(user: NguoiDung, new_password):
-#         user.matkhau = new_password
-#         user.save()
-#         return user
+    @staticmethod
+    def reset_password_forgot(user: Account, new_password):
+        user.password = new_password
+        user.save()
+        return user
 #     @staticmethod   
 #     def update_images(user: NguoiDung, avatar_name, background_name):
        
