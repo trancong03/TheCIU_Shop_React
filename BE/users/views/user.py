@@ -92,6 +92,37 @@ def get_user(request, username):
         return JsonResponse({'user': serializer.data}, status=200)
     else:
         return JsonResponse({'error': 'User not found'}, status=404)
+
+@csrf_exempt
+def register(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            username = data.get('username')
+            password = data.get('password')
+            full_name = data.get('fullname')
+            email = data.get('email')
+            print(username,password,full_name,email)
+            if not username or not password or not email or not full_name:
+                return JsonResponse({'error': 'Tất cả các trường là bắt buộc'}, status=400)
+            if Account.objects.filter(username=username).exists():
+                return JsonResponse({'error': 'Tên người dùng đã tồn tại'}, status=400)
+            if Account.objects.filter(email=email).exists():
+                return JsonResponse({'error': 'Email đã được sử dụng'}, status=400)
+            new_user = Account.objects.create(
+                username=username,
+                password=password,
+                email=email,
+                name=full_name
+            )
+            new_user.save()
+            return JsonResponse({'message': 'Đăng ký thành công'}, status=201)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Phương thức không hợp lệ'}, status=405)
+
 # @csrf_exempt
 # @require_http_methods(['PUT'])
 # def update_user(request, id):
@@ -106,38 +137,6 @@ def get_user(request, username):
 #     serializer = AccountSerializer(user)
 #     return JsonResponse(serializer.data, status=200)
 
-# @csrf_exempt
-# def register(request):
-#     if request.method == 'POST':
-#         try:
-#             data = json.loads(request.body)
-#             username = data.get('username')
-#             password = data.get('password')
-#             full_name = data.get('fullname')
-#             email = data.get('email')
-#             if not username or not password or not email or not full_name:
-#                 return JsonResponse({'error': 'Tất cả các trường là bắt buộc'}, status=400)
-#             # Kiểm tra xem tên người dùng hoặc email đã tồn tại chưa
-#             if Account.objects.filter(tendangnhap=username).exists():
-#                 return JsonResponse({'error': 'Tên người dùng đã tồn tại'}, status=400)
-#             if Account.objects.filter(email=email).exists():
-#                 return JsonResponse({'error': 'Email đã được sử dụng'}, status=400)
-#             # Mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
-#             hashed_password = make_password(password)
-#             # Tạo người dùng mới
-#             new_user = Account.objects.create(
-#                 tendangnhap=username,
-#                 matkhau=hashed_password,
-#                 email=email,
-#                 hoten=full_name
-#             )
-#             new_user.save()
-#             return JsonResponse({'message': 'Đăng ký thành công'}, status=201)
-
-#         except Exception as e:
-#             return JsonResponse({'error': str(e)}, status=500)
-
-#     return JsonResponse({'error': 'Phương thức không hợp lệ'}, status=405)
 
 # @csrf_exempt
 # @require_http_methods(['POST'])
