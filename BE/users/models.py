@@ -1,114 +1,146 @@
 from django.db import models
-from PIL import Image
-import os
 
-class LocalImage(models.Model):
-    image = models.ImageField(upload_to='')  # Lưu ảnh trực tiếp vào REACT_IMAGE_DIR
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        self.resize_image()
-
-    def resize_image(self):
-        img_path = self.image.path
-        max_width, max_height = 800, 800  # Giới hạn kích thước ảnh
-        img = Image.open(img_path)
-        if img.width > max_width or img.height > max_height:
-            img.thumbnail((max_width, max_height), Image.ANTIALIAS)
-            img.save(img_path, quality=85)  # Nén ảnh với chất lượng 85%
-
-
-
-class NguoiDung(models.Model):
-    manguoidung = models.AutoField(primary_key=True)
-    tendangnhap = models.CharField(max_length=20, null=True, blank=True)
-    matkhau = models.CharField(max_length=50, null=True, blank=True)
-    hoten = models.CharField(max_length=50, null=True, blank=True)
-    ngaysinh = models.DateField(null=True, blank=True)
-    email = models.EmailField(null=True, blank=True)
-    diachi = models.CharField(max_length=255, null=True, blank=True)
-    sodienthoai = models.CharField(max_length=12, null=True, blank=True)
-    gioitinh = models.CharField(max_length=4, null=True, blank=True)
-    socccd = models.CharField(max_length=12, null=True, blank=True)
-    mota = models.CharField(max_length=255, null=True, blank=True)
-    anhdaidien = models.CharField(max_length=50, null=True, blank=True)
-    anhnen = models.CharField(max_length=10, null=True, blank=True)
-    is_superuser = models.BooleanField(default=False)
-    sodu = models.DecimalField(max_digits=19, decimal_places=4, null=True, blank=True)
+# Bảng Account
+class Account(models.Model):
+    username = models.CharField(max_length=150, primary_key=True)
+    password = models.CharField(max_length=255)
+    status = models.BooleanField(default=True)
+    name = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    phone = models.CharField(max_length=15, null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female')], null=True, blank=True)
+    avatar = models.URLField(null=True, blank=True)
+    background = models.URLField(null=True, blank=True)
 
     class Meta:
-        db_table = 'NGUOIDUNG'  # Custom table name
+        db_table = 'account'
 
-    def __str__(self):
-        return self.hoten
-
-
-class BaiViet(models.Model):
-    mabaiviet = models.AutoField(primary_key=True)  # Tự động tăng, là khóa chính
-    manguoidung = models.IntegerField(null=True, blank=True)  # Sử dụng IntegerField để phù hợp với kiểu int
-    magd = models.CharField(max_length=10, null=True, blank=True)  # Trường magd kiểu char(10)
-    tieude = models.CharField(max_length=75, null=True, blank=True)  # Trường tiêu đề
-    noidung = models.TextField(null=True, blank=True)  # Trường nội dung là TextField
-    thongtinlienlac = models.CharField(max_length=200, null=True, blank=True)  # Thông tin liên lạc
-    mota = models.TextField(null=True, blank=True)  # Mô tả là TextField
-    diachibaiviet = models.CharField(max_length=200, null=True, blank=True)  # Địa chỉ bài viết
-    giatri = models.DecimalField(max_digits=19, decimal_places=4, null=True, blank=True)  # Giá trị
-    ngaydang = models.DateField(null=True, blank=True)  # Ngày đăng (sử dụng DateField thay vì DateTimeField)
-    ngayhethan = models.DateField(null=True, blank=True)  # Ngày hết hạn (sử dụng DateField)
-    hangxe = models.CharField(max_length=15, null=True, blank=True)  # Hãng xe
-    loaixe = models.CharField(max_length=25, null=True, blank=True)  # Loại xe
-    nammua = models.IntegerField(null=True, blank=True)  # Năm mua
-    dungtich = models.CharField(max_length=50, null=True, blank=True)  # Dung tích
-    sokmdadi = models.BigIntegerField(null=True, blank=True)  # Số km đã đi
-    baohanh = models.CharField(max_length=40, null=True, blank=True)  # Bảo hành
-    xuatxu = models.CharField(max_length=30, null=True, blank=True)  # Xuất xứ
-    tinhtrangxe = models.CharField(max_length=30, null=True, blank=True)  # Tình trạng xe
-    giaban = models.CharField(max_length=10, null=True, blank=True)  # Giá bán
+# Bảng Categories
+class Category(models.Model):
+    category_id = models.AutoField(primary_key=True)
+    category_name = models.CharField(max_length=255)
 
     class Meta:
-        db_table = 'BAIVIET'  # Tên bảng trong cơ sở dữ liệu
+        db_table = 'categories'
 
-    def __str__(self):
-        return self.tieude
-
-
-class HinhAnh(models.Model):
-    mabaiviet = models.ForeignKey(BaiViet, on_delete=models.CASCADE)
-    mahinhanh = models.AutoField(primary_key=True)
-    tenfile = models.CharField(max_length=255)
+# Bảng Colors
+class Color(models.Model):
+    color_id = models.AutoField(primary_key=True)
+    color_name = models.CharField(max_length=100, unique=True)
 
     class Meta:
-        db_table = 'HINHANH'  # Custom table name for the images
+        db_table = 'colors'
 
-    def __str__(self):
-        return self.tenfile
-class YeuThich(models.Model):
-    mayt = models.AutoField(primary_key=True)
-    manguoidung = models.IntegerField(db_column='MANGUOIDUNG')  # Map với cột MANGUOIDUNG
-    mabaiviet = models.IntegerField(db_column='MABAIVIET')
+# Bảng Feedback
+class Feedback(models.Model):
+    product_id = models.IntegerField()
+    username = models.ForeignKey(Account, on_delete=models.CASCADE)
+    rating = models.IntegerField()
+    description = models.TextField()
+    dateFB = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = 'YEUTHICH'  # Custom table name for the images
+        db_table = 'feedback'
+        unique_together = ('product_id', 'username')
 
+# Bảng GroupUsers
+class GroupUser(models.Model):
+    idGroup = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    note = models.TextField(null=True, blank=True)
 
-class Xe(models.Model):
-    maxe = models.AutoField(primary_key=True)
-    tenxe = models.CharField(max_length=50, null=True, blank=True)
-    loaixe = models.CharField(max_length=25, null=True, blank=True)
-    hangxe = models.CharField(max_length=15, null=True, blank=True)
-    biensoxe = models.CharField(max_length=10, null=True, blank=True)
-    nammua = models.DateTimeField(null=True, blank=True)
-    dungtich = models.CharField(max_length=5, null=True, blank=True)
-    sokmdadi = models.BigIntegerField(null=True, blank=True)
-    mausac = models.CharField(max_length=15, null=True, blank=True)
-    thongso = models.CharField(max_length=200, null=True, blank=True)
-    tinhtrangxe = models.CharField(max_length=15, null=True, blank=True)
-    giaban = models.CharField(max_length=10, null=True, blank=True)
-    
-   
     class Meta:
-        db_table = 'XE'  # Custom table name for vehicles
+        db_table = 'groupusers'
 
-    def __str__(self):
-        return self.tenxe
+# Bảng Image
+class Image(models.Model):
+    url = models.URLField(primary_key=True)
+    product_id = models.IntegerField()
+
+    class Meta:
+        db_table = 'image'
+
+# Bảng OrderDetails
+class OrderDetail(models.Model):
+    order_id = models.IntegerField()
+    variant_id = models.IntegerField()
+    quantity = models.IntegerField()
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        db_table = 'orderdetails'
+        unique_together = ('order_id', 'variant_id')
+
+# Bảng Orders
+class Order(models.Model):
+    order_id = models.AutoField(primary_key=True)
+    username = models.ForeignKey(Account, on_delete=models.CASCADE)
+    order_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=50)
+    payment_date = models.DateTimeField(null=True, blank=True)
+    voucher_id = models.IntegerField(null=True, blank=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        db_table = 'orders'
+
+# Bảng Products
+class Product(models.Model):
+    product_id = models.AutoField(primary_key=True)
+    product_name = models.CharField(max_length=255)
+    title = models.TextField(null=True, blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    category_id = models.ForeignKey(Category, on_delete=models.CASCADE)
+    imageSP = models.URLField(null=True, blank=True)
+    rating = models.FloatField(default=0)
+    dateadd = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'products'
+
+# Bảng ProductVariants
+class ProductVariant(models.Model):
+    variant_id = models.AutoField(primary_key=True)
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    color_id = models.ForeignKey(Color, on_delete=models.CASCADE)
+    size_id = models.IntegerField()
+
+    class Meta:
+        db_table = 'productvariants'
+
+# Bảng QLPhanQuyen
+class QLPhanQuyen(models.Model):
+    idGroup = models.ForeignKey(GroupUser, on_delete=models.CASCADE)
+    idScreen = models.IntegerField()
+    status = models.BooleanField(default=True)
+
+    class Meta:
+        db_table = 'qlphanquyen'
+        unique_together = ('idGroup', 'idScreen')
+
+# Bảng Screen
+class Screen(models.Model):
+    idScreen = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = 'screen'
+
+# Bảng Sizes
+class Size(models.Model):
+    size_id = models.AutoField(primary_key=True)
+    size_name = models.CharField(max_length=50, unique=True)
+
+    class Meta:
+        db_table = 'sizes'
+
+# Bảng User_GroupUser
+class UserGroupUser(models.Model):
+    username = models.ForeignKey(Account, on_delete=models.CASCADE)
+    idGroup = models.ForeignKey(GroupUser, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'user_groupuser'
+        unique_together = ('username', 'idGroup')

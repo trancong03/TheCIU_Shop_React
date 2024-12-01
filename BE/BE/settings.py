@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'corsheaders',
-    'CustomAdmin'
 ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -99,13 +98,14 @@ WSGI_APPLICATION = 'BE.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',
-        'NAME': 'WebDangBaiBanXe',  # Tên cơ sở dữ liệu
+        'NAME': 'QuanLyShop',  # Tên cơ sở dữ liệu
         'USER': 'sa',  # Tài khoản đăng nhập
         'PASSWORD': '123',  # Mật khẩu
         'HOST': 'localhost',  # Địa chỉ server SQL
         'PORT': '',  # Cổng (mặc định là 1433)
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
+            'charset': 'utf8mb4',  # Thêm dòng này để hỗ trợ đầy đủ UTF-8
         },
     }
 }

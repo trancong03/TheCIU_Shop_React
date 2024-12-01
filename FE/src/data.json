@@ -1,69 +1,29 @@
 [
     {
         "id": 1,
-        "name": "Quần jean ống rộng THE C.I.U - Wide Leg Jeans - 122308",
-        "price": 350000,
+        "name": "Exciter 155 VVA phiên bản cao cấp ABS mới",
+        "price": 54000000,
         "images": [
-            "qJeans1.webp",
+            "EXCITER155.webp",
             "qJeans11.webp",
             "qJeans12.webp"
         ]
     },
     {
         "id": 2,
-        "name": "Product 2",
+        "name": "VARIO 160",
         "price": 150,
         "images": [
-            "image3.jpg",
+            "vario160.png",
             "image4.jpg"
         ]
     },
     {
         "id": 3,
-        "name": "Product 3",
+        "name": "Janus phiên bản tiêu chuẩn",
         "price": 350000,
         "images": [
-            "qJeans1.webp",
-            "qJeans11.webp",
-            "qJeans12.webp"
-        ]
-    },
-    {
-        "id": 4,
-        "name": "Product 4",
-        "price": 350000,
-        "images": [
-            "qJeans1.webp",
-            "qJeans11.webp",
-            "qJeans12.webp"
-        ]
-    },
-    {
-        "id": 5,
-        "name": "Product 5",
-        "price": 350000,
-        "images": [
-            "qJeans1.webp",
-            "qJeans11.webp",
-            "qJeans12.webp"
-        ]
-    },
-    {
-        "id": 6,
-        "name": "Product 6",
-        "price": 350000,
-        "images": [
-            "qJeans1.webp",
-            "qJeans11.webp",
-            "qJeans12.webp"
-        ]
-    },
-    {
-        "id": 7,
-        "name": "Product 7",
-        "price": 350000,
-        "images": [
-            "qJeans1.webp",
+            "Janus-standard.webp",
             "qJeans11.webp",
             "qJeans12.webp"
         ]

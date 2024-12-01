@@ -1,109 +1,135 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
-import Footer from "./Components/Footer";
-import ErrorPage from "./Components/ErrorPage";
-import Header from "./Components/Header";
-import DN from './Components/DN';
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import Footer from "./Components/Footer/Footer";
+import ErrorPage from "./Components/Footer/ErrorPage";
+import Header from "./Components/Header/Header";
+import DN from './Components/Header/DN';
 import Home from "./Pages/Home";
-import Cart from "./Pages/Cart";
-import Admin from "./Pages/Admin";
-import Account from './Pages/Account';
-import InfomationAccount from "./Components/ui_user_account/InfomationAccount";
-import ResetPassWord from "./Components/ui_user_account/ResetPassWord";
-import { CartProvider } from './Components/context/CardContext'; 
+import Account from "./Pages/Account";
+import InfomationAccount from "./Components/userUI/InfomationAccount";
+import ResetPassWord from "./Components/userUI/ResetPassWord";
+import ForgotPassword from "./Components/userUI/ForgotPassword";
+import { CartProvider } from "./Components/context/CardContext";
+import ProductDetail from "./Pages/ProductDetail";
+import NewPost from "./Pages/NewPost";
+import axios from "axios";
+import PostOfUser from "./Components/userUI/PostOfUser";
+import UpdatePost from "./Pages/UpdatePost";
+import ErrorBoundary from "./ErrorBoundary";
 import ProductLike from "./Pages/ProductLike";
-import Manage_address from "./Components/ui_user_account/manage_address";
-import AdminStores from "./Pages/Admin/AdminStores";
-import AdminOrders from "./Pages/Admin/AdminOrders";
-import AdminUsers from "./Pages/Admin/AdminUsers";
-import AdminProducts from "./Pages/Admin/AdminProducts";
-import CategoryProducts from "./Components/ui_product/product_category";
-import SearchProducts from "./Components/ui_product/product_search.jsx";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
   const [userInfo, setUserInfo] = useState({});
+  const [isForgotPasswordVisible, setIsForgotPasswordVisible] = useState(false);
 
   const handleLoginClick = () => {
     setShowLogin(true);
+    setIsForgotPasswordVisible(false); // Đảm bảo quên mật khẩu không được hiển thị khi đăng nhập
   };
 
   const closeLogin = () => {
     setShowLogin(false);
+    setIsForgotPasswordVisible(false); // Đóng cả hai khi thoát
+  };
+  const closeForgotPassword = () => {
+    setIsForgotPasswordVisible(false); // Đóng cả hai khi thoát
   };
 
+
   const handleLoginSuccess = (data) => {
-    setUserInfo(data.person);
-    localStorage.setItem('userInfo', JSON.stringify(data.person));
+    setUserInfo(data.user);
+    const { token } = data;
+    localStorage.setItem('authToken', token);
+    localStorage.setItem('userInfo', JSON.stringify(data.user));
     setShowLogin(false);
   };
+  const getUserById = async (username) => {
+    
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/api/user/${username}/`);
+      if (response.status === 200) {
+        return response.data.user; // Trả về thông tin người dùng
+      }
+    } catch (error) {
+      if (error.response) {
+        console.error('Error:', error.response.data.error);
+        return null;
+      } else {
+        console.error('Network Error:', error.message);
+        return null;
+      }
+    }
+  };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const storedUserInfo = localStorage.getItem('userInfo');
+      if (storedUserInfo) {
+        try {
+          const userData = JSON.parse(storedUserInfo);
+          const user = await getUserById(userData.username);
+          console.log(user);
+          setUserInfo(user); // Cập nhật state với dữ liệu người dùng
+        } catch (error) {
+          console.error('Invalid JSON in localStorage', error);
+          setError('Có lỗi xảy ra khi lấy thông tin người dùng.');
+        }
+      }
+    };
+
+    fetchUserData(); // Gọi hàm lấy dữ liệu người dùng
+  }, []);
 
   useEffect(() => {
     const storedUserInfo = localStorage.getItem('userInfo');
     if (storedUserInfo) {
-      setUserInfo(JSON.parse(storedUserInfo));
+      setUserInfo(JSON.parse(storedUserInfo)); // Tải thông tin từ localStorage
     }
   }, []);
 
+  const handleForgotPasswordClick = () => {
+    setIsForgotPasswordVisible(true);
+  };
+
+
+
   return (
-    <CartProvider personID={userInfo ? userInfo.iduser : "5"}>
+    <CartProvider User={userInfo}>
       <BrowserRouter>
-        <AppContent 
-          userInfo={userInfo} 
-          setUserInfo={setUserInfo} 
-          showLogin={showLogin} 
-          handleLoginClick={handleLoginClick} 
-          closeLogin={closeLogin} 
-          handleLoginSuccess={handleLoginSuccess} 
-        />
+        {/* Điều chỉnh Header chỉ hiển thị khi không phải là các route admin */}
+          <Header userInfo={userInfo} setUserInfo={setUserInfo} onLoginClick={handleLoginClick} className="fixed top-0 left-0 w-full bg-white shadow-md z-50" />
+        {showLogin && (
+          <DN
+            closeLogin={closeLogin}
+            onLoginSuccess={handleLoginSuccess}
+            onForgotPassword={handleForgotPasswordClick}
+          />
+        )}
+
+        {isForgotPasswordVisible && <ForgotPassword closeForgotPassword={closeForgotPassword} />}
+
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/account/*" element={<Account user={userInfo} setUserInfo={setUserInfo} />}>
+            <Route path="like-product" element={<ErrorBoundary><ProductLike /></ErrorBoundary>} />
+            <Route path="info" element={<InfomationAccount user={userInfo} setUserInfo={setUserInfo} />} />
+            <Route path="reset-password" element={<ResetPassWord user={userInfo} />} />
+            <Route path="user-post/" element={<PostOfUser userId={userInfo} />} />
+          </Route>
+          <Route path="/product-detail" element={<ProductDetail />} />
+          <Route path="/new-post" element={<ErrorBoundary><NewPost /></ErrorBoundary>} />
+          <Route path="/update-post" element={<ErrorBoundary><UpdatePost /></ErrorBoundary>} />
+          <Route path="*" element={<ErrorPage />} />
+        </Routes>
+
+        <Footer />
       </BrowserRouter>
     </CartProvider>
   );
-}
-
-function AppContent({ userInfo, setUserInfo, showLogin, handleLoginClick, closeLogin, handleLoginSuccess }) {
-  const location = useLocation();
-  const isAdminPage = location.pathname.startsWith('/admin');
-
-  return (
-    <>
-      {!isAdminPage && (
-        <Header 
-          userInfo={userInfo} 
-          setUserInfo={setUserInfo} 
-          onLoginClick={handleLoginClick} 
-        />
-      )}
-      
-      {showLogin && <DN closeLogin={closeLogin} onLoginSuccess={handleLoginSuccess} />}
-
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/products/:categoryId" element={<CategoryProducts />} /> 
-        <Route path="/search_product/:product_name" element={<SearchProducts />} /> 
-        <Route path="/account/*" element={<Account user={userInfo} setUserInfo={setUserInfo} />}>
-          <Route path="cart" element={<Cart />} />
-          <Route path="like-product" element={<ProductLike />} />
-          <Route path="manage-address" element={<Manage_address />} />
-          <Route path="info" element={<InfomationAccount user={userInfo} setUserInfo={setUserInfo} />} />
-          <Route path="reset-password" element={<ResetPassWord user={userInfo} />} />
-        </Route>
-        <Route path="/admin/*" element={<Admin />}>
-          <Route path="stores" element={<AdminStores />} />
-          <Route path="orders" element={<AdminOrders />} />
-          <Route path="users" element={<AdminUsers />} />
-          <Route path="products" element={<AdminProducts />} />
-        </Route>
-        <Route path="*" element={<ErrorPage />} />
-      </Routes>
-
-      {!isAdminPage && <Footer />}
-    </>
-  );
-}
-
+};
 export default App;

@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
 
 .login-container {
-    background-image: url('image/slide1.webp');
+    background: #f6f5f7;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -36,22 +36,22 @@
 }
 
 .login-container span {
-    font-size: 11px;
+    font-size: 12px;
 }
 
 .login-container a {
     color: #333;
     font-size: 14px;
     text-decoration: none;
-    margin: 10px 0;
+    margin: 15px 0;
 }
 
 .login-container button {
     border-radius: 20px;
-    border: 1px solid #b5eca6;
-    background-color: #b5eca6;
+    border: 1px solid #FF4B2B;
+    background-color: #FF4B2B;
     color: #FFFFFF;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: bold;
     padding: 12px 45px;
     letter-spacing: 1px;
@@ -214,11 +214,11 @@
 }
 
 .overlay {
-    background-image: url('image/slide1.webp');
+    background-image: url("image/bgLogin.webp");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 0 0;
-    color: #eff6f6;
+    color: #FFFFFF;
     position: relative;
     left: -100%;
     height: 100%;
@@ -276,15 +276,4 @@
     margin: 0 5px;
     height: 40px;
     width: 40px;
-}
-.close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: transparent !important;
-    border: none !important;
-    font-size: 40px !important;
-    cursor: pointer;
-    z-index: 100;
-    color: black !important;
 }
