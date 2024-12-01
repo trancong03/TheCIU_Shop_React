@@ -214,7 +214,7 @@ def reset_password(request):
             if not user:
                 return JsonResponse({'error': 'User not found'}, status=404)
             # Kiểm tra mật khẩu cũ
-            if (old_password.strip(user.password.strip()) == user.password.strip()):
+            if (old_password.strip() != user.password.strip()):
                 return JsonResponse({'error': 'Mật khẩu cũ không đúng'}, status=400)
             UserService.reset_password(user, new_password)
             return JsonResponse({'success': True, 'message': 'Mật khẩu đã được thay đổi thành công.'})

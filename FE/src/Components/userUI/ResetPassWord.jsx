@@ -21,13 +21,16 @@ export default function ResetPassWord({user}) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    user_id: user.manguoidung,
-                    current_password: currentPassword,
+                    username: user.username,
+                    old_password: currentPassword,
                     new_password: newPassword,
                 }),
             });
             const data = await response.json();
             if (response.ok) {
+                setCurrentPassword("")
+                setConfirmPassword("")
+                setNewPassword("")
                 alert('Mật khẩu đã được thay đổi thành công');
             } else {
                 alert('Có lỗi xảy ra: ' + data.error);
