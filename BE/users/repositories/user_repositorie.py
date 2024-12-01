@@ -7,6 +7,16 @@ class UserRepository:
             return Account.objects.get(username=username)
         except Account.DoesNotExist:
             return None
+    @staticmethod
+    def update_user_info(user: Account, data):
+        user.name = data.get('name', user.name)
+        user.email = data.get('email', user.email)
+        user.address = data.get('address', user.address)
+        user.phone = data.get('phone', user.phone)
+        user.gender = data.get('gender', user.gender)
+        user.birthday = data.get('birthday', user.birthday)
+        user.save()
+        return user
 #     @staticmethod
 #     def get_user_by_email(email):
 #         try:

@@ -88,7 +88,7 @@ def login(request):
 def get_user(request, username):
     user = UserService.get_user_by_id(username)
     if user:
-        serializer = AccountSerializer(user) 
+        serializer = AccountSerializer(user)    
         return JsonResponse({'user': serializer.data}, status=200)
     else:
         return JsonResponse({'error': 'User not found'}, status=404)
@@ -123,19 +123,19 @@ def register(request):
 
     return JsonResponse({'error': 'Phương thức không hợp lệ'}, status=405)
 
-# @csrf_exempt
-# @require_http_methods(['PUT'])
-# def update_user(request, id):
-#     user = UserService.get_user_by_id(id)
-#     if not user:
-#         return JsonResponse({'error': 'User not found'}, status=404)
-#     try:
-#         data = json.loads(request.body)
-#     except json.JSONDecodeError:
-#         return JsonResponse({'error': 'Invalid JSON'}, status=400)
-#     user = UserService.update_user_info(user, data)
-#     serializer = AccountSerializer(user)
-#     return JsonResponse(serializer.data, status=200)
+@csrf_exempt
+@require_http_methods(['PUT'])
+def update_user(request, username):
+    user = UserService.get_user_by_id(username)
+    if not user:
+        return JsonResponse({'error': 'User not found'}, status=404)
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    user = UserService.update_user_info(user, data)
+    serializer = AccountSerializer(user)
+    return JsonResponse(serializer.data, status=200)
 
 
 # @csrf_exempt

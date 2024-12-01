@@ -6,7 +6,9 @@ class UserService:
     @staticmethod
     def get_user_by_id(username):
         return UserRepository.get_user_by_id(username)
-
+    @staticmethod
+    def update_user_info(user: Account, data):
+        return UserRepository.update_user_info(user, data)
 #     @staticmethod
 #     def update_images(user: NguoiDung, avatar_name=None, background_name=None):
 #         UserRepository.update_images(user, avatar_name, background_name)
@@ -21,9 +23,7 @@ class UserService:
 #     def login(username, password):
 #         return UserRepository.login(username, password)
 
-#     @staticmethod
-#     def update_user_info(user: NguoiDung, data):
-#         return UserRepository.update_user_info(user, data)
+#    
 
 #     @staticmethod
 #     def reset_password(user: NguoiDung, new_password):

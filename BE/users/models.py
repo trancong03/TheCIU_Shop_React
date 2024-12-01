@@ -8,6 +8,7 @@ class Account(models.Model):
     name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=15, null=True, blank=True)
+    birthday = models.DateField()
     address = models.TextField(null=True, blank=True)
     gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female')], null=True, blank=True)
     avatar = models.URLField(null=True, blank=True)
