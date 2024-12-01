@@ -181,21 +181,21 @@ def verify_otp(request):
             return JsonResponse({'message': 'OTP hợp lệ.'}, status=200)
         return JsonResponse({'error': 'OTP không hợp lệ.'}, status=400)
     return JsonResponse({'error': 'Method not allowed'}, status=405)
-# @csrf_exempt
-# @require_http_methods(['POST'])
-# def update_user_images(request):
-#     iduser = request.POST.get('iduser')
-#     avatar_name = request.POST.get('avatar')
-#     background_name = request.POST.get('background')
+@csrf_exempt
+@require_http_methods(['POST'])
+def update_user_images(request):
+    username = request.POST.get('username')
+    avatar_name = request.POST.get('avatar')
+    background_name = request.POST.get('background')
     
     
-#     user = UserService.get_user_by_id(iduser)
-#     if not user:
-#         return JsonResponse({'error': 'User not found'}, status=404)
-#     print(avatar_name, background_name)
+    user = UserService.get_user_by_id(username)
+    if not user:
+        return JsonResponse({'error': 'User not found'}, status=404)
+    print(avatar_name, background_name)
     
-#     UserService.update_images(user, avatar_name=avatar_name, background_name=background_name)
-#     return JsonResponse({'success': True}, status=200)
+    UserService.update_images(user, avatar_name=avatar_name, background_name=background_name)
+    return JsonResponse({'success': True}, status=200)
 
 # @csrf_exempt
 # def reset_password(request):

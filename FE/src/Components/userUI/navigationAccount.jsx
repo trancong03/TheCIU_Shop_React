@@ -5,12 +5,12 @@ import { faEnvelope, faLocationDot, faShare, faPlus } from '@fortawesome/free-so
 import { BellRing, BookMarked, Heart, Info, ListOrdered, LogOut, TimerReset, Wallet } from 'lucide-react';
 import { FaCartPlus } from 'react-icons/fa';
 export default function NavigationAccount({ user, setUserInfo }) {
-    const [coverImage, setCoverImage] = useState(`image/${user.anhnen || 'default-cover.jpg'}`); // Thay 'default-cover.jpg' bằng đường dẫn tới hình ảnh mặc định
-    const [avatarImage, setAvatarImage] = useState(`image/${user.anhdaidien || 'default-avatar.jpg'}`); // Thay 'default-avatar.jpg' bằng đường dẫn tới hình ảnh mặc định
+    const [coverImage, setCoverImage] = useState(`image/${user.background || 'default-cover.jpg'}`); // Thay 'default-cover.jpg' bằng đường dẫn tới hình ảnh mặc định
+    const [avatarImage, setAvatarImage] = useState(`image/${user.avatar || 'default-avatar.jpg'}`); // Thay 'default-avatar.jpg' bằng đường dẫn tới hình ảnh mặc định
 
     useEffect(() => {
-        setCoverImage(`/image/${user.anhnen || 'default-cover.jpg'}`);
-        setAvatarImage(`/image/${user.anhdaidien || 'default-avatar.jpg'}`);
+        setCoverImage(`http://127.0.0.1:8000//media/images/${user.background || 'default-cover.jpg'}`);
+        setAvatarImage(`http://127.0.0.1:8000//media/images/${user.avatar || 'default-avatar.jpg'}`);
     }, [user]);
 
     const handleImageChange = async (file, type) => {
@@ -21,32 +21,28 @@ export default function NavigationAccount({ user, setUserInfo }) {
             alert('File size exceeds the maximum limit (5MB).');
             return;
         }
-        console.log(file);
-
         const formData = new FormData();
         if (type === 'avatar') {
             formData.append('avatar', file.name);
         } else {
             formData.append('background', file.name);
         }
-        formData.append('iduser', user.manguoidung);
+        formData.append('username', user.username);
 
         try {
-            const response = await fetch('http://localhost:8000/api/update-images/', {
+            const response = await fetch('http://127.0.0.1:8000/api/update-images/', {
                 method: 'POST',
                 body: formData,
             });
 
             const result = await response.json();
-
             if (result.success) {
                 alert(`${type === 'background' ? 'Cover' : 'Avatar'} updated successfully`);
                 if (type === 'background') {
-                    setCoverImage(URL.createObjectURL(file)); // Hiển thị ảnh ngay lập tức
+                    setCoverImage(URL.createObjectURL(file)); 
                 } else {
-                    setAvatarImage(URL.createObjectURL(file)); // Hiển thị ảnh ngay lập tức
+                    setAvatarImage(URL.createObjectURL(file)); 
                 }
-                // Reload lại trang sau khi cập nhật thành công
                 window.location.reload();
             } else {
                 alert(`Error updating ${type}: ` + result.error);
@@ -115,20 +111,13 @@ export default function NavigationAccount({ user, setUserInfo }) {
                 </div>
                 <br />
                 <div className="mt-3 pl-4 shadow-sm p-4">
-                    <h2 className="text-xl font-semibold">{user.hoten}</h2>
-                    <div className="flex items-center">
-                        <span className="text-yellow-500 text-lg">★★★★☆</span>
-                        <span className="ml-2 text-lg">(1 nhận xét)</span>
-                        <span className="ml-2 text-blue-500">Đã xác thực</span>
-                    </div>
-                    <div className='pt-3 pb-3 text-slate-500 text-lg'>
-                        <h1>Người theo dõi : <b>0</b> |  Đang theo dõi:  <b>0</b></h1>
-                    </div>
+                    <h2 className="text-xl font-semibold">{user.name}</h2>
+                    
                     <p className="text-gray-600 mt-2 text-md">
-                        <FontAwesomeIcon icon={faLocationDot} /> {user.diachi}
+                        <FontAwesomeIcon icon={faLocationDot} className='mr-3' /> {user.address}
                     </p>
-                    <p className="text-lg text-gray-600 mt-2 text-md">
-                        <FontAwesomeIcon icon={faEnvelope} />  {user.email}
+                    <p className=" text-gray-600 mt-2 text-md">
+                        <FontAwesomeIcon icon={faEnvelope}  className='mr-3'/>  {user.email}
                     </p>
                     <br />
                     <hr />

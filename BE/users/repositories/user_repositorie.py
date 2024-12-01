@@ -47,11 +47,11 @@ class UserRepository:
         user.password = new_password
         user.save()
         return user
-#     @staticmethod   
-#     def update_images(user: NguoiDung, avatar_name, background_name):
+    @staticmethod   
+    def update_images(user: Account, avatar_name, background_name):
        
-#         if avatar_name:
-#             user.anhdaidien = avatar_name
-#         if background_name:
-#             user.anhnen = background_name
-#         user.save()
+        if avatar_name:
+            user.avatar = avatar_name
+        if background_name:
+            user.background = background_name
+        user.save()

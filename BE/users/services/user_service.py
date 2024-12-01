@@ -16,9 +16,9 @@ class UserService:
     def update_user_info(user: Account, data):
         return UserRepository.update_user_info(user, data)
     
-#     @staticmethod
-#     def update_images(user: NguoiDung, avatar_name=None, background_name=None):
-#         UserRepository.update_images(user, avatar_name, background_name)
+    @staticmethod
+    def update_images(user: Account, avatar_name=None, background_name=None):
+        UserRepository.update_images(user, avatar_name, background_name)
 
 #     @staticmethod
 #     def set_password(user: NguoiDung, newpassword=None):

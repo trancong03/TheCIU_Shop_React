@@ -72,15 +72,13 @@ function App() {
         try {
           const userData = JSON.parse(storedUserInfo);
           const user = await getUserById(userData.username);
-          console.log(user);
-          setUserInfo(user); // Cập nhật state với dữ liệu người dùng
+          setUserInfo(user); 
         } catch (error) {
           console.error('Invalid JSON in localStorage', error);
           setError('Có lỗi xảy ra khi lấy thông tin người dùng.');
         }
       }
     };
-
     fetchUserData(); // Gọi hàm lấy dữ liệu người dùng
   }, []);
 
@@ -125,7 +123,6 @@ function App() {
           <Route path="/update-post" element={<ErrorBoundary><UpdatePost /></ErrorBoundary>} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
-
         <Footer />
       </BrowserRouter>
     </CartProvider>
