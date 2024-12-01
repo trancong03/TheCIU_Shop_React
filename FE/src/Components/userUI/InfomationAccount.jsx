@@ -30,7 +30,7 @@ export default function InfomationAccount({ user, setUserInfo }) {
     };
     const saveUserInfo = async () => {
         try {
-            const response = await fetch(`http://localhost:8000/api/users/${user.manguoidung}/`, {
+            const response = await fetch(`http://localhost:8000/api/users/${user.username}/`, {
                 method: 'PUT',  // Thay bằng 'PATCH' nếu chỉ cập nhật một số trường
                 headers: {
                     'Content-Type': 'application/json',
