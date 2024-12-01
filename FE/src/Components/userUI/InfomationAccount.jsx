@@ -119,7 +119,7 @@ export default function InfomationAccount({ user, setUserInfo }) {
                               value={user.address || ""}
                               onChange={(e) => setUserInfo({ ...user, address: e.target.value })}
                               onClick={toggleLocationSelector}
-                              className="w-full focus:outline-none "
+                              className="w-full focus:outline-none text-slate-400  font-bold "
                           />
                           <FontAwesomeIcon icon={faPlay} />
                       </div>

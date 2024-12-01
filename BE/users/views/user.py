@@ -197,16 +197,29 @@ def update_user_images(request):
     UserService.update_images(user, avatar_name=avatar_name, background_name=background_name)
     return JsonResponse({'success': True}, status=200)
 
-# @csrf_exempt
-# def reset_password(request):
-#     if request.method == 'POST':
-#         data = json.loads(request.body)
-#         user_id = data.get('user_id')
-#         new_password = data.get('new_password')
-#         hashed_password = make_password(new_password)
-#         user = UserService.get_user_by_id(user_id)
-#         if not user:
-#             return JsonResponse({'error': 'User not found'}, status=404)
-#         UserService.reset_password(user, hashed_password)
-#         return JsonResponse({'success': True, 'message': 'Mật khẩu đã được thay đổi thành công.'})
-#     return JsonResponse({'error': 'Method not allowed'}, status=405)
+@csrf_exempt
+def reset_password(request):
+    if request.method == 'POST':
+        try:
+            # Parse dữ liệu từ request body
+            data = json.loads(request.body)
+            username = data.get('username')
+            old_password = data.get('old_password')  # Mật khẩu cũ
+            new_password = data.get('new_password')
+            # Kiểm tra xem username, mật khẩu cũ và mật khẩu mới có hợp lệ không
+            if not username or not old_password or not new_password:
+                return JsonResponse({'error': 'Cả username, mật khẩu cũ và mật khẩu mới đều là bắt buộc'}, status=400)
+            # Lấy người dùng từ dịch vụ
+            user = UserService.get_user_by_id(username)
+            if not user:
+                return JsonResponse({'error': 'User not found'}, status=404)
+            # Kiểm tra mật khẩu cũ
+            if (old_password.strip(user.password.strip()) == user.password.strip()):
+                return JsonResponse({'error': 'Mật khẩu cũ không đúng'}, status=400)
+            UserService.reset_password(user, new_password)
+            return JsonResponse({'success': True, 'message': 'Mật khẩu đã được thay đổi thành công.'})
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Dữ liệu không hợp lệ'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
