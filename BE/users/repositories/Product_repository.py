@@ -12,6 +12,13 @@ class ProductRepository:
         except Product.DoesNotExist:
             return None
     @staticmethod
+    def get_all_product_image_by_id(product_id):
+        try:
+            images = Image.objects.filter(product_id=product_id)
+            return images
+        except Product.DoesNotExist:
+            return None
+    @staticmethod
     def get_all_color():
         try:
             color = Color.objects.all()
@@ -25,6 +32,7 @@ class ProductRepository:
             return size
         except Product.DoesNotExist:
             return None
+        
         
 #     @staticmethod
 #     def get_all_bai_viet_by_manguoidung(manguoidung):

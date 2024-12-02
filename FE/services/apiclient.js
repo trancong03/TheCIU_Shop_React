@@ -49,8 +49,40 @@ const getImageProductByID = async (product_id) => {
         return null;
     }
 };
+const getColor = async () => {
+    try {
+        const response = await apiClient.get(`http://127.0.0.1:8000/api/color/`);
+        if (response.status === 200) {
+            return response.data;
+        }
+    } catch (error) {
+        if (error.response) {
+            console.error('Error:', error.response.data.error);
+        } else {
+            console.error('Network Error:', error.message);
+        }
+        return null;
+    }
+};
+
+const getSize = async () => {
+    try {
+        const response = await apiClient.get(`http://127.0.0.1:8000/api/size`);
+        if (response.status === 200) {
+            return response.data;
+        }
+    } catch (error) {
+        if (error.response) {
+            console.error('Error:', error.response.data.error);
+        } else {
+            console.error('Network Error:', error.message);
+        }
+        return null;
+    }
+};
+
 
 
 // Sử dụng default export
 export default apiClient;
-export { getUserById, getImageProductByID };
+export { getUserById, getImageProductByID,getColor,getSize };
