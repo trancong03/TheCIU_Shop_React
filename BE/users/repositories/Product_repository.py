@@ -60,3 +60,22 @@ class ProductRepository:
             return {'message': 'Product does not exist'}
         except Exception as e:
             return {'message': f'An error occurred: {str(e)}'}
+
+    @staticmethod
+    def get_variant_id(product_id, color_id, size_id):
+        try:
+            variant = ProductVariant.objects.filter(
+                product_id = product_id,
+                color_id = color_id,
+                size_id = size_id
+            ).first()
+            if variant:
+                return {
+                    'variant_id': variant.variant_id,
+                    'quantity': variant.quantity
+                }
+            else:
+                return {'message': 'Variant not found'}
+        except Exception as e:
+            return {'message': f'An error occurred: {str(e)}'}
+

@@ -69,3 +69,23 @@ def add_to_cart(request):
             return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
     else:
         return JsonResponse({"error": "Invalid request method"}, status=405)
+
+@csrf_exempt
+def get_variant_id(request):
+    if request.method == "GET":
+        try:
+            product_id = request.GET.get('product_id')
+            color_id = request.GET.get('color_id')
+            size_id = request.GET.get('size_id')
+            if not product_id or not color_id or not size_id:
+                return JsonResponse({"error": "Missing required parameters"}, status=400)
+            variant = ProductRepository.get_variant_id(product_id,color_id,size_id)
+            if variant:
+                print(variant)
+                return JsonResponse(variant, status=200)
+            else:
+                return JsonResponse({"error": "Variant not found"}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
+    else:
+        return JsonResponse({"error": "Invalid request method"}, status=405)

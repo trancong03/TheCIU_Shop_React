@@ -109,13 +109,13 @@ class Product(models.Model):
 # Bảng ProductVariants
 class ProductVariant(models.Model):
     variant_id = models.AutoField(primary_key=True)
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product_id = models.IntegerField()
     quantity = models.IntegerField()
-    color_id = models.ForeignKey(Color, on_delete=models.CASCADE)
+    color_id = models.IntegerField()
     size_id = models.IntegerField()
 
     class Meta:
-        db_table = 'productvariants'
+        db_table = 'ProductVariants'
 
 # Bảng QLPhanQuyen
 class QLPhanQuyen(models.Model):
