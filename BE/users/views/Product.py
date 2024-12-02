@@ -3,8 +3,10 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse
 import json
+
 from django.views.decorators.csrf import csrf_exempt
 from .user import authenticate_token
+from users.repositories.Product_repository import ProductRepository
 from ..services.Product_service import ProductService
 from django.forms.models import model_to_dict
 def get_all_product(request):
@@ -14,6 +16,16 @@ def get_all_product(request):
         products_list = list(query_result.values())
         try:
             # Trả về dữ liệu dưới dạng JSON
+            return JsonResponse(products_list, safe=False)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Failed to decode JSON"}, status=500)
+    return JsonResponse({"error": "No data found or invalid structure"}, status=404)
+def get_all_product_image_by_id(request,product_id):
+    query_result = ProductRepository.get_all_product_image_by_id(product_id)
+    if query_result:
+        # Chuyển đổi queryset thành danh sách dict
+        products_list = list(query_result.values())
+        try:
             return JsonResponse(products_list, safe=False)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Failed to decode JSON"}, status=500)
