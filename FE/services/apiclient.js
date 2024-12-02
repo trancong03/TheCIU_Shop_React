@@ -33,7 +33,24 @@ const getUserById = async (username) => {
         return null;
     }
 };
+// Hàm getUserById
+const getImageProductByID = async (product_id) => {
+    try {
+        const response = await apiClient.get(`http://127.0.0.1:8000/api/product/${product_id}/`);
+        if (response.status === 200) {
+            return response.data;
+        }
+    } catch (error) {
+        if (error.response) {
+            console.error('Error:', error.response.data.error);
+        } else {
+            console.error('Network Error:', error.message);
+        }
+        return null;
+    }
+};
+
 
 // Sử dụng default export
 export default apiClient;
-export { getUserById };
+export { getUserById, getImageProductByID };

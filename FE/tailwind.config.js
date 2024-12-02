@@ -6,7 +6,10 @@ export default {
       fontFamily: {
         arial: ['Arial', 'sans-serif','Roboto'],
       },
+      lineClamp: {
+        2: '2', // Để giới hạn 2 dòng
+      },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/line-clamp'),],
 };

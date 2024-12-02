@@ -12,7 +12,8 @@ export default function Home() {
     const fetchProducts = async () => {
       try {
         const response = await axios.get("http://127.0.0.1:8000/api/product/");
-        setProducts(response.data); // Lưu danh sách sản phẩm từ API
+        const shuffled = [...response.data].sort(() => Math.random() - 0.5);
+        setProducts(shuffled); // Lưu danh sách sản phẩm từ API
       } catch (err) {
         setError(err.response ? err.response.data : err.message); // Xử lý lỗi
       } finally {
@@ -26,7 +27,7 @@ export default function Home() {
   return (
     <div className=" bg-white">
       <Banner />
-      <div className="grid grid-cols-4 m-[5%]">
+      <div className="grid grid-cols-4 m-[10%]">
         {products.map((product) => {
           return (
             <ErrorBoundary>
