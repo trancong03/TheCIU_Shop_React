@@ -7,13 +7,13 @@ import { useNavigate } from "react-router-dom";
 export default function CartItem({ Product }) {
     const defaultImage = 'default.jpg';
     const navigate = useNavigate();
-    const { likeProduct, isProductLiked, likeProducts } = useCart();
+    // const { likeProduct, isProductLiked } = useCart();
     const [isLiked, setIsLiked] = useState(false);
 
     // Cập nhật trạng thái yêu thích khi thay đổi sản phẩm
-    useEffect(() => {
-        setIsLiked(isProductLiked(Product.MABAIVIET)); // Đồng bộ trạng thái yêu thích khi sản phẩm thay đổi
-    }, [Product.MABAIVIET, isProductLiked]); // Theo dõi sự thay đổi của likeProducts
+    // useEffect(() => {
+    //     setIsLiked(isProductLiked(Product.MABAIVIET)); // Đồng bộ trạng thái yêu thích khi sản phẩm thay đổi
+    // }, [Product.product_id, isProductLiked]); // Theo dõi sự thay đổi của likeProducts
 
     // Xử lý xem chi tiết sản phẩm
     const handleViewDetails = () => {
@@ -28,23 +28,16 @@ export default function CartItem({ Product }) {
     };
     
     return (
-        <div className="flex items-center justify-center flex-col mt-3">
+        <div className="flex items-center justify-center flex-col mt-3 rounded-2xl">
             <div className='w-[18vw] bg-white rounded-2xl ml-3 mb-5 group shadow-2xl'>
                 <div className='relative overflow-hidden flex items-center justify-center flex-col'>
                     <img
-                        src={`http://127.0.0.1:8000//media/images//${Product.HINHANH.length > 0 ? Product.HINHANH[0].TENFILE : defaultImage}`}
+                        src={`http://127.0.0.1:8000//media/images//${Product.imageSP || defaultImage}`}
                         alt={Product.Name || 'Sản phẩm không có tên'}
-                        className='w-auto h-[20rem] shadow-2xl'
+                        className='w-full h-[20rem] shadow-2xl rounded-t-2xl'
                     />
-                    <div className='absolute h-full w-full bg-black/60 rounded-2xl flex flex-col items-center justify-between p-5 -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all duration-300'>
-                        <div className='text-start text-lg'>
-                            <h3 className='line-clamp-3 font-arial text-white '> Hãng xe: {Product.HANGXE || 'Sản phẩm không có tên'}</h3>
-                            <h3 className='line-clamp-3 font-arial text-white '> Loại xe: {Product.LOAIXE || 'Sản phẩm không có tên'}</h3>
-                            <h3 className='line-clamp-3 font-arial text-white '> Năm mua: {Product.NAMMUA || 'Sản phẩm không có tên'}</h3>
-                            <h3 className='line-clamp-3 font-arial text-white '> Dung tích: {Product.DUNGTICH || 'Sản phẩm không có tên'}</h3>
-                            <h3 className='line-clamp-3 font-arial text-white '>Số km : {Product.SOKMDADI || 'Sản phẩm không có tên'}</h3>
-                            <h3 className='line-clamp-3 font-arial text-white '>{Product.BAOHANH || 'Sản phẩm không có tên'}</h3>
-                        </div>
+                    <div className='absolute h-full w-full bg-black/60 rounded-t-2xl flex flex-col items-center justify-between p-5 -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all duration-300'>
+                        
                         <div>
                             <button
                                 className='w-full h-[3rem] bg-transparent border text-white font-bold rounded-full '
@@ -68,27 +61,21 @@ export default function CartItem({ Product }) {
                     </div>
                 </div>
                 <h4 className='truncate font-arial text-black font-bold text-md ml-3 mt-3'>
-                    {Product.TIEUDE || 'Sản phẩm không có tên'}
-                </h4>
-                <h4 className='truncate font-arial text-black text-md ml-3 mt-3'>
-                    {Product.NAMMUA} - {Product.TINHTRANGXE}
+                    {Product.product_name || 'Sản phẩm không có tên'}
                 </h4>
                 <h4 className='truncate font-arial text-red-700 font-bold text-md ml-3 mt-3'>
-                    {Product.GIABAN || 'Sản phẩm không có tên'}
+                    {Product.price || 'Sản phẩm không có tên'}
                 </h4>
-                <div className="flex justify-start items-center gap-2 ml-3 mt-3">
-                    <img
-                        src={Product.NGUOIDUNG[0].ANHDAIDIEN ? `/image/${Product.NGUOIDUNG[0].ANHDAIDIEN}` : "/image/icon.png"}
-                        alt="User anhdaidien"
-                        className="w-5 h-5 rounded-full"
-                    />
-                    <h4 className='truncate font-arial text-green-950  text-sm'>
-                        {Product.DIACHIBAIVIET.split(',').pop().trim() || 'Sản phẩm không có tên'}
-                    </h4>
-                </div>
+             
                 <br />
+                <img
+                    src={`http://127.0.0.1:8000//media/images/${Product.imageSP}`}
+                    alt={`${Product.Name} `}
+                    className='w-[50px] h-[50px] object-contain m-3 rounded-md cursor-pointer hover:opacity-80'
+                />
             </div>
-            <div className='flex justify-center space-x-2'>
+            
+            {/* <div className='flex justify-center space-x-2'>
                 {Product.HINHANH.map((image, index) => (
                     <img
                         key={index}
@@ -97,7 +84,7 @@ export default function CartItem({ Product }) {
                         className='w-[50px] h-[50px] object-contain m-3 rounded-md cursor-pointer hover:opacity-80'
                     />
                 ))}
-            </div>
+            </div> */}
         </div>
     );
 }
