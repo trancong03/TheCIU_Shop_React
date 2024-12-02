@@ -19,6 +19,8 @@ urlpatterns = [
 
 
     path('product/', Product.get_all_product, name='get_all_product'),
+    path('color/', Product.get_all_color, name='get_all_color'),
+    path('size/', Product.get_all_sizet, name='get_all_sizet'),
     path('product/<int:product_id>/', Product.get_all_product_image_by_id, name='get_all_product_image_by_id'),
     # path('new-Product/', Product.tao_bai_viet, name='tao_bai_viet'),
     # path('update-Product/', Product.sua_bai_viet, name='sua_bai_viet'),

@@ -1,7 +1,7 @@
 import logging
 from ..utils.db import execute_query
 import logging
-from users.models import Product,Image
+from users.models import Product,Image,Color,Size
 
 class ProductRepository:
     @staticmethod
@@ -12,10 +12,17 @@ class ProductRepository:
         except Product.DoesNotExist:
             return None
     @staticmethod
-    def get_all_product_image_by_id(product_id):
+    def get_all_color():
         try:
-            images = Image.objects.filter(product_id=product_id)
-            return images
+            color = Color.objects.all()
+            return color
+        except Product.DoesNotExist:
+            return None
+    @staticmethod
+    def get_all_size():
+        try:
+            size = Size.objects.filter()
+            return size
         except Product.DoesNotExist:
             return None
         
