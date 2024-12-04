@@ -3,33 +3,16 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import { getCartQuantity } from "../../../services/apiclient";
 export default function Header({ onLoginClick, userInfo, setUserInfo,  }) {
   const [isSticky, setIsSticky] = useState(false);
   const [activeLink, setActiveLink] = useState("home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [cart, setCart] = useState(JSON.parse(localStorage.getItem('cart')));
   const menuRef = useRef(null);
   const navigate = useNavigate();
-
-
-  const handleDangTinClick = () => {
-    if (userInfo == null || !userInfo) {
-      onLoginClick();
-    }
-    else {
-      navigate('/new-post');
-    }
-  };
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (menuRef.current && !menuRef.current.contains(event.target)) {
-          setIsMenuOpen(false);
-        }
-      };
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, [menuRef]);
+  console.log(JSON.parse(localStorage.getItem('cart')));
+ 
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,11 +26,33 @@ export default function Header({ onLoginClick, userInfo, setUserInfo,  }) {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
+    
   }, []);
+  const userData = JSON.parse(localStorage.getItem('userInfo'));
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const result = await getCartQuantity(userData.username); // Gọi API
+        if (result) {
+          setCart(result.data);
+          localStorage.setItem('cart', JSON.stringify(result.data));
+        } else {
+          console.error('Failed to fetch cart');
+        }
+      } catch (error) {
+        console.error('Error while fetching cart:', error);
+      }
+    };
+    fetchCart();
+  }, []);
+
+  
+
   const handleAuthClick = () => {
     if (userInfo!=null||userInfo) {
       setUserInfo(null);
       localStorage.removeItem('userInfo'); 
+      localStorage.removeItem('cart');
       navigate('/');
     }
     if (userInfo == null ) {
@@ -63,6 +68,8 @@ export default function Header({ onLoginClick, userInfo, setUserInfo,  }) {
     }
     setIsMenuOpen(false);
   };
+  
+
   return (
     <div className={`transition-all duration-300 ${isSticky ? 'fixed top-0 left-0 w-full shadow-md z-50' : ''}`}>
       <div className=" h-20 flex items-center bg-white p-3 ">
@@ -95,6 +102,22 @@ export default function Header({ onLoginClick, userInfo, setUserInfo,  }) {
           >
             <Heart />
           </a>
+          <a
+            href="#"
+            onClick={() => setActiveLink("heart")}
+            className={`text-[#5b5858cc] relative flex gap-2 items-center  font-arial  px-3 py-2 ${activeLink === "heart"
+              ? "text-black font-bold"
+              : "hover:text-black"
+              }`}
+          >
+            <ShoppingCartIcon />
+            {cart && cart.total_quantity > 0 && (
+              <span className="absolute bottom-5 left-8 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+                {cart.total_quantity}
+              </span>
+            )}
+          </a>
+          
           <a
             href="#"
             onClick={() => setActiveLink("BellRing")}

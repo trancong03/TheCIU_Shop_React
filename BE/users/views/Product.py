@@ -20,9 +20,10 @@ def get_all_product(request):
     return JsonResponse({"error": "No data found or invalid structure"}, status=404)
 def get_cart_quantity(request,username):
     query_result = ProductRepository.get_cart_details(username)
+    print(query_result)
     if query_result:
         try:
-             return JsonResponse(query_result, status=200)
+             return JsonResponse({"data":query_result}, status=200)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Failed to decode JSON"}, status=500)
     return JsonResponse({"error": "No data found or invalid structure"}, status=404)

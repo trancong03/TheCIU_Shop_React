@@ -107,8 +107,17 @@ const handleAddToCart = async (variant_id, username, quantity) => {
         console.error('Lỗi khi thêm vào giỏ hàng:', error);
     }
 };
-
+const getCartQuantity = async (username) => {
+    try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/get_cart_quantity/${username}/`);
+      
+        return response.data;
+     
+    } catch (error) {
+        console.error('Error fetching cart data:', error);
+    }
+};
 
 // Sử dụng default export
 export default apiClient;
-export { getUserById, getImageProductByID, getColor, getSize, get_sizes_and_colors };
+export { getUserById, getImageProductByID, getColor, getSize, get_sizes_and_colors, getCartQuantity };

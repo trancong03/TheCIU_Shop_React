@@ -99,7 +99,10 @@ function App() {
     <CartProvider User={userInfo}>
       <BrowserRouter>
         {/* Điều chỉnh Header chỉ hiển thị khi không phải là các route admin */}
+        <ErrorBoundary>
           <Header userInfo={userInfo} setUserInfo={setUserInfo} onLoginClick={handleLoginClick} className="fixed top-0 left-0 w-full bg-white shadow-md z-50" />
+
+          </ErrorBoundary>
         {showLogin && (
           <DN
             closeLogin={closeLogin}
