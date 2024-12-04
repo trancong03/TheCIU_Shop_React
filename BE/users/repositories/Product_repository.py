@@ -101,3 +101,42 @@ class ProductRepository:
             return {'message': f'An error occurred: {str(e)}'}
 
 
+    @staticmethod
+    def get_cart_quantity(username):
+        try:
+            cart_items = Cart.objects.filter(username=username)
+            
+            total_quantity = sum(item.quantity for item in cart_items)
+            
+            return total_quantity
+        except Exception as e:
+            return {'message': f'An error occurred: {str(e)}'}
+    @staticmethod
+    def get_cart_details(username):
+        try:
+            cart_items = Cart.objects.filter(username=username)
+            
+            if cart_items.exists():
+                unique_products = cart_items.values('variant_id').distinct()
+                product_count = unique_products.count()
+                cart_details = []
+                for item in cart_items:
+                    product_variant = ProductVariant.objects.get(variant_id=item.variant_id)
+                    product = product_variant.product  # Lấy thông tin sản phẩm từ ProductVariant
+                    cart_details.append({
+                        'product_id': product.product_id,
+                        'product_name': product.product_name,
+                        'variant_id': item.variant_id,
+                        'quantity': item.quantity,
+                        'price': product.price,
+                        'color': product_variant.color.color_name if product_variant.color else None,
+                        'size': product_variant.size.size_name if product_variant.size else None,
+                    })
+                return {
+                    'total_quantity': product_count,
+                    'cart_items': cart_details,
+                }
+            else:
+                return {'message': 'No items found in cart'}
+        except Exception as e:
+            return {'message': f'An error occurred: {str(e)}'}

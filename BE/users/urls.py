@@ -25,17 +25,6 @@ urlpatterns = [
     path('add_to_cart/', Product.add_to_cart, name='add_to_cart'),
     path('get_variant_id/', Product.get_variant_id, name='get_variant_id'),
     path('get_sizes_and_colors/', Product.get_sizes_and_colors, name='get_sizes_and_colors'),
-    # path('new-Product/', Product.tao_bai_viet, name='tao_bai_viet'),
-    # path('update-Product/', Product.sua_bai_viet, name='sua_bai_viet'),
-   
-    # path('delete-Product/<int:id>/', Product.xoa_bai_viet, name='xoa_bai_viet'),
-    # path('Product-id/<int:id>/', Product.get_Product_by_id, name='get_Product_by_id'),
-    # path('Product-like/<int:iduser>/', Product.get_all_bai_viet_like, name='get_all_bai_viet_like'),
-    # path('Product/<int:iduser>/', Product.get_all_bai_viet_by_manguoidung, name='get_all_bai_viet_by_manguoidung'),
+    path('get_cart_quantity/<str:username>/', Product.get_cart_quantity, name='get_sizes_and_colors'),
     
-
-    # path('like-Product/', Product.them_yeu_thich, name='them_yeu_thich'),
-    # path('islike-Product/', Product.kiem_tra_yeu_thich, name='them_yeu_thich'),
-    # path('get-like-Product/<int:iduser>/', Product.lay_list_yeu_thich, name='lay_list_yeu_thich'),
-    # path('remove-like-Product/', Product.xoa_yeu_thich, name='them_yeu_thich'),
 ]

@@ -12,11 +12,17 @@ from django.forms.models import model_to_dict
 def get_all_product(request):
     query_result = ProductService.get_all_product()
     if query_result:
-        # Chuyển đổi queryset thành danh sách dict
         products_list = list(query_result.values())
         try:
-            # Trả về dữ liệu dưới dạng JSON
             return JsonResponse(products_list, safe=False)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Failed to decode JSON"}, status=500)
+    return JsonResponse({"error": "No data found or invalid structure"}, status=404)
+def get_cart_quantity(request,username):
+    query_result = ProductRepository.get_cart_details(username)
+    if query_result:
+        try:
+             return JsonResponse(query_result, status=200)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Failed to decode JSON"}, status=500)
     return JsonResponse({"error": "No data found or invalid structure"}, status=404)
