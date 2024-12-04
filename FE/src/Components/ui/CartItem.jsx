@@ -75,9 +75,10 @@ export default function CartItem({ Product }) {
                     </div>
                 </div>
                 <div onClick={handleViewDetails}>
-                    <h4 className=' font-arial text-black font-bold text-md ml-3 mt-3 line-clamp-2'>
+                    <h4 className=' font-arial text-black font-bold text-md ml-3 mt-3 line-clamp-2  hover:underline hover:cursor-pointer'>
                         {Product.product_name || 'Sản phẩm không có tên'}
                     </h4>
+
                     <h4 className=' text-black font-black text-md ml-3 mt-3'>
                         {new Intl.NumberFormat('vi-VN').format(Product.price || 'Sản phẩm không có tên')} đ
                     </h4>

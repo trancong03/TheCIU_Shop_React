@@ -78,4 +78,26 @@ class ProductRepository:
                 return {'message': 'Variant not found'}
         except Exception as e:
             return {'message': f'An error occurred: {str(e)}'}
+   
+    @staticmethod
+    def get_sizes_and_colors(product_id):
+        try:
+            variants = ProductVariant.objects.filter(product_id=product_id).select_related('size', 'color')
+            if variants.exists():
+                # Loại bỏ trùng lặp cho sizes
+                sizes = { (variant.size.size_id, variant.size.size_name) for variant in variants }
+                sizes = [{'id': size[0], 'name': size[1]} for size in sizes]
+
+                # Loại bỏ trùng lặp cho colors
+                colors = { (variant.color.color_id, variant.color.color_name) for variant in variants }
+                colors = [{'id': color[0], 'name': color[1]} for color in colors]
+
+                return {
+                    'sizes': sizes,
+                    'colors': colors,
+                }
+            return {'message': 'No variants found for the given product_id'}
+        except Exception as e:
+            return {'message': f'An error occurred: {str(e)}'}
+
 

@@ -80,9 +80,24 @@ const getSize = async () => {
         return null;
     }
 };
+const get_sizes_and_colors = async (product_id) => {
+    try {
+        const response = await apiClient.get(`http://127.0.0.1:8000/api/get_sizes_and_colors/?product_id=${product_id}`);
+        if (response.status === 200) {
+            return response.data;
+        }
+    } catch (error) {
+        if (error.response) {
+            console.error('Error:', error.response.data.error);
+        } else {
+            console.error('Network Error:', error.message);
+        }
+        return null;
+    }
+};
 
 
 
 // Sử dụng default export
 export default apiClient;
-export { getUserById, getImageProductByID,getColor,getSize };
+export { getUserById, getImageProductByID, getColor, getSize, get_sizes_and_colors };

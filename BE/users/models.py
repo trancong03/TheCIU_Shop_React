@@ -45,14 +45,7 @@ class Feedback(models.Model):
         db_table = 'feedback'
         unique_together = ('product_id', 'username')
 
-# Bảng GroupUsers
-class GroupUser(models.Model):
-    idGroup = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
-    note = models.TextField(null=True, blank=True)
 
-    class Meta:
-        db_table = 'groupusers'
 
 # Bảng Image
 class Image(models.Model):
@@ -106,34 +99,19 @@ class Product(models.Model):
     class Meta:
         db_table = 'products'
 
-# Bảng ProductVariants
 class ProductVariant(models.Model):
     variant_id = models.AutoField(primary_key=True)
-    product_id = models.IntegerField()
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)  # Liên kết tới bảng Product
     quantity = models.IntegerField()
-    color_id = models.IntegerField()
-    size_id = models.IntegerField()
+    color = models.ForeignKey('Color', on_delete=models.SET_NULL, null=True)  # Liên kết tới bảng Colors
+    size = models.ForeignKey('Size', on_delete=models.SET_NULL, null=True)    # Liên kết tới bảng Sizes
 
     class Meta:
         db_table = 'ProductVariants'
 
-# Bảng QLPhanQuyen
-class QLPhanQuyen(models.Model):
-    idGroup = models.ForeignKey(GroupUser, on_delete=models.CASCADE)
-    idScreen = models.IntegerField()
-    status = models.BooleanField(default=True)
 
-    class Meta:
-        db_table = 'qlphanquyen'
-        unique_together = ('idGroup', 'idScreen')
 
-# Bảng Screen
-class Screen(models.Model):
-    idScreen = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255)
 
-    class Meta:
-        db_table = 'screen'
 
 # Bảng Sizes
 class Size(models.Model):
@@ -143,11 +121,4 @@ class Size(models.Model):
     class Meta:
         db_table = 'sizes'
 
-# Bảng User_GroupUser
-class UserGroupUser(models.Model):
-    username = models.ForeignKey(Account, on_delete=models.CASCADE)
-    idGroup = models.ForeignKey(GroupUser, on_delete=models.CASCADE)
 
-    class Meta:
-        db_table = 'user_groupuser'
-        unique_together = ('username', 'idGroup')

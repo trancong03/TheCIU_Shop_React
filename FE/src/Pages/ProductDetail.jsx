@@ -1,14 +1,13 @@
+import { ShoppingCartIcon } from 'lucide-react';
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { MapPin, Clock, Star, Phone, MessageSquare, Car, Calendar, BatteryCharging, CheckCircle, Tag, Box, Shield, ShoppingCartIcon } from 'lucide-react';
 import { FaHeart } from "react-icons/fa";
-import { getColor, getSize } from "../../services/apiclient";
+import { useLocation } from "react-router-dom";
+import apiClient, { get_sizes_and_colors } from "../../services/apiclient";
 export default function productDetail() {
     
     const { state } = useLocation();
     const { product, images } = state || {}; // Lấy product từ state
     const [currentIndex, setCurrentIndex] = useState(0);
-    console.log(product);
 
     const updateMainImage = (index) => {
         setCurrentIndex(index);
@@ -28,36 +27,59 @@ export default function productDetail() {
     }
     const [size, setSize] = useState([]); // State để lưu hình ảnh
     const [color, setColor] = useState([]); // State để lưu hình ảnh
+    const [quantity, setQuantity] = useState(1);
+    const [variant, setVariant] = useState({});
+    const [selectedColor, setSelectedColor] = useState(null); // Màu sắc được chọn
+    const [selectedSize, setSelectedSize] = useState(null); // Size được chọn
+
     useEffect(() => {
-        const fetchColor = async () => {
-            const color = await getColor(); // Gọi API
-            if (color) {
-               setColor(color) // Cập nhật state với dữ liệu từ API
+        const fetchColorSize = async () => {
+            const result = await get_sizes_and_colors(product.product_id ); // Gọi API
+            
+            if (result) {
+                setColor(result.colors) // Cập nhật state với dữ liệu từ API
+                setSize(result.sizes)
             } else {
                 console.error('Failed to fetch product images');
             }
         };
-        const fetchSize = async () => {
-            const size = await getSize(); // Gọi API
-            if (size) {
-                setSize(size) // Cập nhật state với dữ liệu từ API
-            } else {
-                console.error('Failed to fetch product images');
-            }
-        };
-
-
-       fetchColor();
-       fetchSize();
+        fetchColorSize()
     }, [product.product_id]); // Chỉ chạy khi `Product.product_id` thay đổi
-    // State để lưu giá trị chọn
-    const [selectedValue, setSelectedValue] = useState('');
+    useEffect(() => {
+        const getvariant = async () => {
+            try {
+                const response = await apiClient.get(
+                    `http://127.0.0.1:8000/api/get_variant_id/?product_id=${product.product_id}&color_id=${selectedColor?.id}&size_id=${selectedSize?.id}`
+                );
+
+                if (response.status === 200) {
+                    setVariant(response.data);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        if (selectedColor && selectedSize) {
+            getvariant();
+        }
+    }, [selectedColor, selectedSize]);
+
 
     // Hàm xử lý khi chọn một option
     const handleChange = (event) => {
-        setSelectedValue(event.target.value);
+        const { id, value } = event.target;
+        if (id === "color") {
+            const selectedColor = color.find((item) =>
+                item.id === parseInt(value, 10)
+            );
+            setSelectedColor(selectedColor);
+        } else if (id === "size") {
+            const selectedSize = size.find((item) => item.id === parseInt(value, 10));
+            setSelectedSize(selectedSize);
+        }
     };
-    const [quantity, setQuantity] = useState(1);
+
+    
 
     const handleIncrease = () => {
         setQuantity(quantity + 1);
@@ -68,6 +90,7 @@ export default function productDetail() {
             setQuantity(quantity - 1);
         }
     };
+    console.log(variant);
     
     return (
         <div className ="flex items-center justify-center">
@@ -132,7 +155,7 @@ export default function productDetail() {
                         <label htmlFor="color" className="text-black  text-xl ml-3 mb-3 mt-3">Màu Sắc:</label>
                         <select
                             id="color"
-                            value={selectedValue}
+                            value={selectedColor ? selectedColor.id : ""}
                             onChange={handleChange}
                             className="border p-2 text-xl ml-3 mb-3 mt-3"
                         >
@@ -140,8 +163,8 @@ export default function productDetail() {
                                 -- Chọn màu sắc --
                             </option>
                             {color.map((product) => (
-                                <option key={product.color_id} value={product.color_name}>
-                                    {product.color_name}
+                                <option key={product.id} value={product.id}>
+                                    {product.name}
                                 </option>
                             ))}
                         </select>
@@ -151,8 +174,8 @@ export default function productDetail() {
                     <div className="flex flex-col items-start justify-center">
                         <label htmlFor="color" className="text-black  text-xl ml-3 mb-3 mt-3">Size:</label>
                         <select
-                            id="color"
-                            value={selectedValue}
+                            id="size"
+                            value={selectedSize ? selectedSize.id : ""}
                             onChange={handleChange}
                             className="border p-2 text-xl ml-3 mb-3 mt-3"
                         >
@@ -160,14 +183,14 @@ export default function productDetail() {
                                 -- Chọn size --
                             </option>
                             {size.map((product) => (
-                                <option key={product.size_id} value={product.size_name}>
-                                    {product.size_name}
+                                <option key={product.id} value={product.id}>
+                                    {product.name}
                                 </option>
                             ))}
                         </select>
                     </div>
 
-                    <h3 className=' text-black  text-xl ml-3 mb-3 mt-3'>Tồn Kho : </h3>
+                    <h3 className=' text-black  text-xl ml-3 mb-3 mt-3'>Tồn Kho : {variant ? variant.quantity: "0"}</h3>
                     <div className="flex items-center space-x-2 mb-3">
                         <span className="text-black  text-xl ml-3 mb-3 mt-3">Số lượng</span>
                         <button
@@ -191,7 +214,7 @@ export default function productDetail() {
                     </div>
                     <div className="flex items-center justify-center gap-2">
                         <button
-                            className='w-full h-[3rem] bg-transparent border text-white bg-slate-500 font-bold rounded-full hover:text-red-200 hover:border-red-200 '
+                            className='w-full h-[3rem] bg-transparent border text-black bg-slate-500 font-bold rounded-full hover:text-red-200 hover:border-red-200 '
                         >
                             <div className="flex items-center justify-center gap-2">
                                 <span>Mua Ngay</span>
