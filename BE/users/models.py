@@ -67,9 +67,11 @@ class OrderDetail(models.Model):
         unique_together = ('order_id', 'variant_id')
 # Bảng Cart
 class Cart(models.Model):
-    variant_id = models.IntegerField(primary_key=True)
+    cart_id = models.AutoField(primary_key=True)
+    variant_id = models.IntegerField()
     username = models.CharField(max_length=255)
     quantity =models.IntegerField()
+    price = models.FloatField()
     class Meta:
         db_table = 'Cart'
 # Bảng Orders

@@ -21,6 +21,7 @@ import PostOfUser from "./Components/userUI/PostOfUser";
 import UpdatePost from "./Pages/UpdatePost";
 import ErrorBoundary from "./ErrorBoundary";
 import ProductLike from "./Pages/ProductLike";
+import CartProduct from "./Components/userUI/CartProduct";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -71,11 +72,12 @@ function App() {
       if (storedUserInfo) {
         try {
           const userData = JSON.parse(storedUserInfo);
-          const user = await getUserById(userData.username);
-          setUserInfo(user); 
+          if (userData) {
+            const user = await getUserById(userData.username);
+            setUserInfo(user);
+          }
         } catch (error) {
           console.error('Invalid JSON in localStorage', error);
-          setError('Có lỗi xảy ra khi lấy thông tin người dùng.');
         }
       }
     };
@@ -92,16 +94,14 @@ function App() {
   const handleForgotPasswordClick = () => {
     setIsForgotPasswordVisible(true);
   };
-
-
-
+  
+  
   return (
     <CartProvider User={userInfo}>
       <BrowserRouter>
         {/* Điều chỉnh Header chỉ hiển thị khi không phải là các route admin */}
         <ErrorBoundary>
           <Header userInfo={userInfo} setUserInfo={setUserInfo} onLoginClick={handleLoginClick} className="fixed top-0 left-0 w-full bg-white shadow-md z-50" />
-
           </ErrorBoundary>
         {showLogin && (
           <DN
@@ -120,6 +120,17 @@ function App() {
             <Route path="info" element={<InfomationAccount user={userInfo} setUserInfo={setUserInfo} />} />
             <Route path="reset-password" element={<ResetPassWord user={userInfo} />} />
             <Route path="user-post/" element={<PostOfUser userId={userInfo} />} />
+            {/* <Route
+              path="cart"
+              element={
+                userInfo ? (
+                  <CartProduct username={userInfo.username} />
+                ) : (
+                  <div>Loading...</div> // Hoặc thông báo lỗi phù hợp
+                )
+              }
+            /> */}
+
           </Route>
           <Route path="/product-detail" element={<ErrorBoundary><ProductDetail /></ErrorBoundary>} />
           <Route path="/new-post" element={<ErrorBoundary><NewPost /></ErrorBoundary>} />

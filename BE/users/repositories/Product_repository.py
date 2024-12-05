@@ -2,7 +2,8 @@ import logging
 from ..utils.db import execute_query
 import logging
 from users.models import Product,Image,Color,Size,Cart,ProductVariant
-
+from django.db import transaction
+from django.db import connection
 class ProductRepository:
     @staticmethod
     def get_all_product():
@@ -41,6 +42,7 @@ class ProductRepository:
             return None
         
     @staticmethod
+    @transaction.atomic()
     def add_product_to_cart(variant_id, username, quantity):
         try:
             existing_cart_item = Cart.objects.filter(username=username, variant_id=variant_id).first()
@@ -52,8 +54,10 @@ class ProductRepository:
                 new_cart = Cart.objects.create(
                     username=username,
                     variant_id=variant_id,
-                    quantity=quantity
+                    quantity=quantity,
+                    price=None
                 )
+                print(connection.queries[-1]['sql'])
                 new_cart.save()
                 return {'message': 'Product added to cart successfully'}
         except ProductVariant.DoesNotExist:
@@ -124,13 +128,17 @@ class ProductRepository:
                     product_variant = ProductVariant.objects.get(variant_id=item.variant_id)
                     product = product_variant.product  # Lấy thông tin sản phẩm từ ProductVariant
                     cart_details.append({
+                        'cart_id': item.cart_id,
                         'product_id': product.product_id,
                         'product_name': product.product_name,
                         'variant_id': item.variant_id,
                         'quantity': item.quantity,
                         'price': product.price,
                         'color': product_variant.color.color_name if product_variant.color else None,
+                        'color_id': product_variant.color.color_id if product_variant.color else None,
+                        'image':product.imageSP,
                         'size': product_variant.size.size_name if product_variant.size else None,
+                        'size_id': product_variant.size.size_id if product_variant.size else None,
                     })
                 return {
                     'total_quantity': product_count,

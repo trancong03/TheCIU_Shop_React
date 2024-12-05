@@ -69,7 +69,7 @@ export default function NavigationAccount({ user, setUserInfo }) {
 
 
     return (
-        <div className='w-[30vw]'>
+        <div className='w-[30vw]  min-h-screen'>
             <div className="max-w-md mx-auto bg-white rounded-lg overflow-hidden shadow-md p-4 text-md">
                 <div className="relative">
                     <img

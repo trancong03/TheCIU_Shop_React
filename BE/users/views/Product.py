@@ -3,7 +3,7 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse
 import json
-
+from users.models import Product,Image,Color,Size,Cart,ProductVariant
 from django.views.decorators.csrf import csrf_exempt
 from .user import authenticate_token
 from users.repositories.Product_repository import ProductRepository
@@ -20,7 +20,6 @@ def get_all_product(request):
     return JsonResponse({"error": "No data found or invalid structure"}, status=404)
 def get_cart_quantity(request,username):
     query_result = ProductRepository.get_cart_details(username)
-    print(query_result)
     if query_result:
         try:
              return JsonResponse({"data":query_result}, status=200)
@@ -76,6 +75,79 @@ def add_to_cart(request):
             return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
     else:
         return JsonResponse({"error": "Invalid request method"}, status=405)
+
+
+
+@csrf_exempt
+def update_cart(request):
+    if request.method == "POST":
+        try:
+            # Lấy dữ liệu từ request
+            data = json.loads(request.body)
+            cart_id = data.get("cart_id")
+            product_id = data.get("product_id")
+            size = data.get("size")
+            color = data.get("color")
+            quantity = data.get("quantity")
+
+            # Kiểm tra nếu các tham số bắt buộc không có hoặc không hợp lệ
+            if not cart_id or not product_id or not size or not color or quantity is None or quantity <= 0:
+                return JsonResponse({"error": "cart_id, product_id, size, color, and valid quantity are required"}, status=400)
+
+            # Tìm Cart item từ cart_id
+            cart_item = Cart.objects.filter(cart_id=cart_id).first()
+            if not cart_item:
+                return JsonResponse({"error": "Cart item not found"}, status=404)
+
+            # Tìm ProductVariant bằng product_id, size và color
+            product_variant = ProductVariant.objects.filter(
+                product_id=product_id,
+                size=size,
+                color=color
+            ).first()
+
+            if not product_variant:
+                return JsonResponse({"error": "Product variant not found"}, status=404)
+
+            # Cập nhật variant_id và quantity
+            cart_item.product_variant = product_variant  # Cập nhật variant_id (size, color)
+            cart_item.quantity = quantity  # Cập nhật số lượng
+            cart_item.save()
+
+            return JsonResponse({"message": "Cart updated successfully"}, status=200)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON format"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
+    else:
+        return JsonResponse({"error": "Invalid request method"}, status=405)
+
+@csrf_exempt
+def delete_cart_item(request):
+    if request.method == "DELETE":
+        try:
+            # Lấy dữ liệu từ body request
+            data = json.loads(request.body)
+            cart_id = data.get("cart_id")
+
+            # Tìm cart item theo cart_id và variant_id
+            cart_item = Cart.objects.filter(cart_id=cart_id).first()
+
+            if not cart_item:
+                return JsonResponse({"error": "Cart item not found"}, status=404)
+
+            # Xóa sản phẩm khỏi giỏ hàng
+            cart_item.delete()
+
+            return JsonResponse({"message": "Cart item deleted successfully"}, status=200)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON format"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
+
+    return JsonResponse({"error": "Invalid request method"}, status=405)
 
 @csrf_exempt
 def get_variant_id(request):

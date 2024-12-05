@@ -11,8 +11,6 @@ export default function Header({ onLoginClick, userInfo, setUserInfo,  }) {
   const [cart, setCart] = useState(JSON.parse(localStorage.getItem('cart')));
   const menuRef = useRef(null);
   const navigate = useNavigate();
-  console.log(JSON.parse(localStorage.getItem('cart')));
- 
 
   useEffect(() => {
     const handleScroll = () => {
@@ -71,12 +69,12 @@ export default function Header({ onLoginClick, userInfo, setUserInfo,  }) {
   
 
   return (
-    <div className={`transition-all duration-300 ${isSticky ? 'fixed top-0 left-0 w-full shadow-md z-50' : ''}`}>
+    <div className={`transition-all shadow-md duration-300 ${isSticky ? 'fixed top-0 left-0 w-full shadow-md z-50' : ''}`}>
       <div className=" h-20 flex items-center bg-white p-3 ">
         <div className=" mr-5">
           <img
             className="h-20  w-28"
-            src="http://127.0.0.1:8000//media/images/logo1.png"
+            src="http://127.0.0.1:8000//media/images/logo1.png"   
             alt="Logo"
           />
         </div>

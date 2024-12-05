@@ -6,6 +6,7 @@ import InfomationAccount from "../Components/userUI/InfomationAccount"; // Infor
 import PostOfUser from "../Components/userUI/PostOfUser";
 import ProductLike from "./ProductLike";
 import ErrorBoundary from "../ErrorBoundary";
+import CartProduct from './../Components/userUI/CartProduct';
 
 export default function Account({ user, setUserInfo }) {
   return (
@@ -22,7 +23,19 @@ export default function Account({ user, setUserInfo }) {
           <Route path="like-product" element={<ErrorBoundary><ProductLike /></ErrorBoundary>} />
           <Route path="reset-password" element={<ResetPassWord user={user} />} />
           <Route path="user-post/" element={<PostOfUser userId={user} />} />
-        </Routes>
+          <Route
+            path="cart"
+            element={
+              user && user.username ? (
+                <ErrorBoundary>
+                  <CartProduct username={user.username} />
+                </ErrorBoundary>
+              ) : (
+                <p>Loading...</p>
+              )
+            }
+          />
+ </Routes>
       </div>
     </div>
   );

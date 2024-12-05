@@ -110,14 +110,59 @@ const handleAddToCart = async (variant_id, username, quantity) => {
 const getCartQuantity = async (username) => {
     try {
         const response = await axios.get(`http://127.0.0.1:8000/api/get_cart_quantity/${username}/`);
-      
         return response.data;
-     
     } catch (error) {
         console.error('Error fetching cart data:', error);
     }
 };
+const updateCart = async (cartId, productId, size, color, quantity) => {
+    try {
+        const data = {
+            cart_id: cartId,
+            product_id: productId,
+            size: size,
+            color: color,
+            quantity: quantity,
+        };
 
+        // Gửi yêu cầu POST tới API
+        const response = await axios.post('http://127.0.0.1:8000/api/update_cart/', data, {
+            headers: {
+                'Content-Type': 'application/json', // Đảm bảo gửi đúng định dạng JSON
+            },
+        });
+
+        // Kiểm tra phản hồi từ API
+        if (response.status === 200) {
+            console.log("Cart updated successfully:", response.data);
+            return response.data;  // Trả về kết quả thành công
+        } else {
+            console.error("Failed to update cart:", response.data);
+            return null;  // Trả về null nếu có lỗi
+        }
+    } catch (error) {
+        // Xử lý lỗi nếu có
+        console.error("An error occurred:", error.response ? error.response.data : error.message);
+        return null;
+    }
+};
+const deleteCartItem = async (cartId, variantId) => {
+    try {
+        const response = await axios.delete('http://your-api-url/delete-cart-item/', {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            data: {
+                cart_id: cartId,
+            },
+        });
+        if (response.status === 200) {
+            console.log('Item deleted successfully:', response.data);
+        }
+    } catch (error) {
+        console.error('Error deleting cart item:', error.response ? error.response.data : error.message);
+    }
+};
 // Sử dụng default export
 export default apiClient;
-export { getUserById, getImageProductByID, getColor, getSize, get_sizes_and_colors, getCartQuantity };
+export { getUserById, getImageProductByID, getColor, getSize, get_sizes_and_colors, getCartQuantity, handleAddToCart, updateCart, deleteCartItem };
