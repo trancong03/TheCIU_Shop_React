@@ -56,7 +56,7 @@ const ProductListCart = ({ item, onRemove, onUpdateQuantity, onToggleSelect, sel
                 </div>
                 <span className="text-lg font-bold w-2/5">{totalPrice.toLocaleString()}đ</span>
                 <button
-                    onClick={() => onRemove(item.id)}
+                    onClick={() => onRemove(item.cart_id)}
                     className="text-red-500 text-xl hover:text-red-700 w-1/5"
                 >
                     ×

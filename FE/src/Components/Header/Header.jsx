@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { getCartQuantity } from "../../../services/apiclient";
+import { useCart } from "../context/CardContext";
 export default function Header({ onLoginClick, userInfo, setUserInfo,  }) {
   const [isSticky, setIsSticky] = useState(false);
   const [activeLink, setActiveLink] = useState("home");
@@ -26,25 +27,6 @@ export default function Header({ onLoginClick, userInfo, setUserInfo,  }) {
     };
     
   }, []);
-  const userData = JSON.parse(localStorage.getItem('userInfo'));
-  useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const result = await getCartQuantity(userData.username); // Gọi API
-        if (result) {
-          setCart(result.data);
-          localStorage.setItem('cart', JSON.stringify(result.data));
-        } else {
-          console.error('Failed to fetch cart');
-        }
-      } catch (error) {
-        console.error('Error while fetching cart:', error);
-      }
-    };
-    fetchCart();
-  }, []);
-
-  
 
   const handleAuthClick = () => {
     if (userInfo!=null||userInfo) {
@@ -67,7 +49,9 @@ export default function Header({ onLoginClick, userInfo, setUserInfo,  }) {
     setIsMenuOpen(false);
   };
   
-
+  const {
+    cartItems,
+  } = useCart();
   return (
     <div className={`transition-all shadow-md duration-300 ${isSticky ? 'fixed top-0 left-0 w-full shadow-md z-50' : ''}`}>
       <div className=" h-20 flex items-center bg-white p-3 ">
@@ -109,9 +93,9 @@ export default function Header({ onLoginClick, userInfo, setUserInfo,  }) {
               }`}
           >
             <ShoppingCartIcon />
-            {cart && cart.total_quantity > 0 && (
+            {cartItems && cartItems.total_quantity > 0 && (
               <span className="absolute bottom-5 left-8 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
-                {cart.total_quantity}
+                {cartItems.total_quantity}
               </span>
             )}
           </a>
@@ -199,13 +183,7 @@ export default function Header({ onLoginClick, userInfo, setUserInfo,  }) {
                 className="absolute top-[8.5vh] mt-2 bg-white border rounded shadow-md w-60 z-50"
               >
                 <ul className="space-y-4">
-                  {/* <li
-                    className="flex justify-start  items-center hover:bg-gray-200"
-                    onClick={() => handleNavigation('/orders')}
-                  >
-                    <ListOrdered />
-                    <a className="block p-2 rounded">Quản lý tin</a>
-                  </li> */}
+                 
                   <li
                     className="flex justify-start  items-center hover:bg-gray-200"
                     onClick={() => handleNavigation('/notifications')}
@@ -227,20 +205,7 @@ export default function Header({ onLoginClick, userInfo, setUserInfo,  }) {
                     <Info />
                     <a className="block p-2 rounded">Thông tin tài khoản</a>
                   </li>
-                  {/* <li
-                    className="flex justify-start  items-center hover:bg-gray-200"
-                    onClick={() => handleNavigation('/address')}
-                  >
-                    <FontAwesomeIcon icon={faLocationDot} />
-                    <a className="block p-2 rounded">Số địa chỉ</a>
-                  </li>
-                  <li
-                    className="flex justify-start  items-center hover:bg-gray-200"
-                    onClick={() => handleNavigation('/vouchers')}
-                  >
-                    <Wallet />
-                    <a className="block p-2 rounded">Ví voucher</a>
-                  </li> */}
+                 
                   <li
                     className="flex justify-start  items-center hover:bg-gray-200"
                     onClick={handleAuthClick}

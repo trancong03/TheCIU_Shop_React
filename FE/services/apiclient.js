@@ -146,14 +146,14 @@ const updateCart = async (cartId, productId, size, color, quantity) => {
         return null;
     }
 };
-const deleteCartItem = async (cartId, variantId) => {
+const deleteCartItem = async (cartId) => {
     try {
-        const response = await axios.delete('http://your-api-url/delete-cart-item/', {
+        const response = await axios.delete('http://127.0.0.1:8000/api/delete-cart-item/', {
             headers: {
                 'Content-Type': 'application/json',
             },
             data: {
-                cart_id: cartId,
+                cart_id: cartId
             },
         });
         if (response.status === 200) {

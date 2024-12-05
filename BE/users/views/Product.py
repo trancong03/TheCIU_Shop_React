@@ -136,10 +136,8 @@ def delete_cart_item(request):
 
             if not cart_item:
                 return JsonResponse({"error": "Cart item not found"}, status=404)
-
             # Xóa sản phẩm khỏi giỏ hàng
             cart_item.delete()
-
             return JsonResponse({"message": "Cart item deleted successfully"}, status=200)
 
         except json.JSONDecodeError:
