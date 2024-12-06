@@ -10,12 +10,12 @@ import CartProduct from './../Components/userUI/CartProduct';
 
 export default function Account({ user, setUserInfo }) {
   return (
-    <div className="mx-auto w-full bg-white shadow-lg rounded-md flex justify-between items-start gap-4 h-auto">
+    <div className="mx-auto w-full bg-white shadow-lg rounded-md flex justify-between items-start gap-4 h-full">
       {/* Khối NavigationAccount ở bên phải */}
       <NavigationAccount user={user} setUserInfo={setUserInfo} />
 
       {/* Khối hiển thị nội dung */}
-      <div className="flex-1 p-4">
+      <div className="flex-1 justify-start">
         <Routes>
           {/* Route mặc định cho InfomationAccount */}
           <Route path="/" element={<InfomationAccount user={user} setUserInfo={setUserInfo} />} />

@@ -20,7 +20,7 @@ const CartProduct = ({ username }) => {
     }, [username]);
 
     return (
-        <div className="flex flex-col lg:flex-row p-6 lg:p-12 gap-6 bg-white h-fix max-w-screen">
+        <div className="flex flex-col lg:flex-row p-2 lg:p-6 gap-6 bg-white h-fix max-w-screen">
             <div className="flex-1 bg-white shadow-md rounded-lg p-6 min-h-screen">
                 <h2 className="text-2xl font-bold mb-4 text-gray-700">Giỏ Hàng</h2>
                 <div className="flex items-center mb-4">
@@ -33,7 +33,7 @@ const CartProduct = ({ username }) => {
                     <label className="font-bold">Chọn tất cả</label>
                 </div>
                 <div className="flex flex-col justify-between items-baseline">
-                    <div className="h-96 overflow-y-auto scrollbar-hidden">
+                    <div className="h-[65vh] overflow-y-auto scrollbar-hidden">
                         {cartItems.total_quantity === 0 ? (
                             <NoPosts />
                         ) : (

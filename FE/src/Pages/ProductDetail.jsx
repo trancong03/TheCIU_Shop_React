@@ -1,7 +1,7 @@
 import { ShoppingCartIcon } from 'lucide-react';
 import { useEffect, useState } from "react";
 import { FaHeart } from "react-icons/fa";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import apiClient, { get_sizes_and_colors, handleAddToCart } from "../../services/apiclient";
 import { useCart } from '../Components/context/CardContext';
 export default function productDetail({  handleLoginClick }) {
@@ -109,7 +109,11 @@ export default function productDetail({  handleLoginClick }) {
             console.error(error);
         }
     }    
-   
+    const navigate = useNavigate();
+    const handleMuaNgay = ()=>{
+        handleAddCart();
+        navigate('/account/cart')
+    }
     return (
         <div className ="flex items-center justify-center">
             <div className="flex  max-w-[100%] items-center justify-center ml-[10%]  mr-[10%] bg-white">
@@ -232,6 +236,7 @@ export default function productDetail({  handleLoginClick }) {
                     </div>
                     <div className="flex items-center justify-center gap-2">
                         <button
+                        onClick={handleMuaNgay}
                             className='w-full h-[3rem] bg-transparent border text-black bg-slate-500 font-bold rounded-full hover:text-red-200 hover:border-red-200 '
                         >
                             <div className="flex items-center justify-center gap-2">

@@ -111,8 +111,16 @@ class ProductVariant(models.Model):
     class Meta:
         db_table = 'ProductVariants'
 
+class FavoriteProduct(models.Model):
+    username = models.CharField(max_length=255)
+    product_id = models.IntegerField()
+    # Đảm bảo sự kết hợp của username và product là duy nhất
+    class Meta:
+        db_table = 'FavoriteProduct'
+       
 
 
+       
 
 
 # Bảng Sizes
