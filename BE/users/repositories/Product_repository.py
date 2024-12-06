@@ -42,33 +42,41 @@ class ProductRepository:
             return None
         
     @staticmethod
-    @transaction.atomic
+    @transaction.atomic()
     def add_product_to_cart(username, product_id, size=None, color=None, quantity=1):
         try:
-            if quantity <= 0:
-                return {'message': 'Quantity must be greater than zero'}
-            # Nếu không có size và color, lấy variant đầu tiên của product_id
-            variant = (
-                ProductVariant.objects.filter(product_id=product_id).first()
-                if not size and not color
-                else ProductVariant.objects.filter(product_id=product_id, size=size, color=color).first()
-            )
+            # Nếu không có size và color, lấy variant bất kỳ của product_id
+            if not size and not color:
+                variant = ProductVariant.objects.filter(product_id=product_id).first()
+            else:
+                variant = ProductVariant.objects.filter(product_id=product_id, size=size, color=color).first()
 
             # Kiểm tra nếu không tìm thấy variant
             if not variant:
                 return {'message': 'Variant not found for the given product, size, and color'}
 
-            # Thêm sản phẩm mới vào giỏ
-            new_cart = Cart.objects.create(
-                username=username,
-                variant_id=variant.variant_id,
-                quantity=quantity,
-            )
-            return {'message': 'Product added to cart successfully'}
+            # Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
+            existing_cart_item = Cart.objects.filter(username=username, variant_id=variant.variant_id).first()
 
+            if existing_cart_item:
+                # Nếu tồn tại, cập nhật số lượng
+                existing_cart_item.quantity += quantity
+                existing_cart_item.save()
+                return {'message': 'Product quantity updated in the cart successfully'}
+            else:
+                # Nếu không tồn tại, tạo mới
+                new_cart_item = Cart.objects.create(
+                    username=username,
+                    variant_id=variant.variant_id,
+                    quantity=quantity,
+                )
+                new_cart_item.save()
+                return {'message': 'Product added to cart successfully'}
+
+        except ProductVariant.DoesNotExist:
+            return {'message': 'Product variant does not exist'}
         except Exception as e:
             return {'message': f'An error occurred: {str(e)}'}
-
 
 
     @staticmethod

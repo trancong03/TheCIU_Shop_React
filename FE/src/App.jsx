@@ -1,27 +1,27 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-import "./App.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import Footer from "./Components/Footer/Footer";
-import ErrorPage from "./Components/Footer/ErrorPage";
-import Header from "./Components/Header/Header";
-import DN from './Components/Header/DN';
-import Home from "./Pages/Home";
-import Account from "./Pages/Account";
-import InfomationAccount from "./Components/userUI/InfomationAccount";
-import ResetPassWord from "./Components/userUI/ResetPassWord";
-import ForgotPassword from "./Components/userUI/ForgotPassword";
+import "./App.css";
+import { AlertProvider } from "./Components/context/AlertContext";
 import { CartProvider } from "./Components/context/CardContext";
-import ProductDetail from "./Pages/ProductDetail";
-import NewPost from "./Pages/NewPost";
-import axios from "axios";
+import ErrorPage from "./Components/Footer/ErrorPage";
+import Footer from "./Components/Footer/Footer";
+import DN from './Components/Header/DN';
+import Header from "./Components/Header/Header";
+import ForgotPassword from "./Components/userUI/ForgotPassword";
+import InfomationAccount from "./Components/userUI/InfomationAccount";
 import PostOfUser from "./Components/userUI/PostOfUser";
-import UpdatePost from "./Pages/UpdatePost";
+import ResetPassWord from "./Components/userUI/ResetPassWord";
 import ErrorBoundary from "./ErrorBoundary";
+import Account from "./Pages/Account";
+import Home from "./Pages/Home";
+import NewPost from "./Pages/NewPost";
+import ProductDetail from "./Pages/ProductDetail";
 import ProductLike from "./Pages/ProductLike";
-import CartProduct from "./Components/userUI/CartProduct";
+import UpdatePost from "./Pages/UpdatePost";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -95,32 +95,40 @@ function App() {
     setIsForgotPasswordVisible(true);
   };
   
-  
+  const [showAlert, setShowAlert] = useState(false);
+
+  const handleShowAlert = () => {
+    setShowAlert(true);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 3000); // Alert tự ẩn sau 3 giây
+  };
   return (
-    <CartProvider User={userInfo}>
-      <BrowserRouter>
-        {/* Điều chỉnh Header chỉ hiển thị khi không phải là các route admin */}
-        <ErrorBoundary>
-          <Header userInfo={userInfo} setUserInfo={setUserInfo} onLoginClick={handleLoginClick} className="fixed top-0 left-0 w-full bg-white shadow-md z-50" />
+    <AlertProvider>
+      <CartProvider User={userInfo}>
+        <BrowserRouter>
+          {/* Điều chỉnh Header chỉ hiển thị khi không phải là các route admin */}
+          <ErrorBoundary>
+            <Header userInfo={userInfo} setUserInfo={setUserInfo} onLoginClick={handleLoginClick} className="fixed top-0 left-0 w-full bg-white shadow-md z-50" />
           </ErrorBoundary>
-        {showLogin && (
-          <DN
-            closeLogin={closeLogin}
-            onLoginSuccess={handleLoginSuccess}
-            onForgotPassword={handleForgotPasswordClick}
-          />
-        )}
+          {showLogin && (
+            <DN
+              closeLogin={closeLogin}
+              onLoginSuccess={handleLoginSuccess}
+              onForgotPassword={handleForgotPasswordClick}
+            />
+          )}
 
-        {isForgotPasswordVisible && <ForgotPassword closeForgotPassword={closeForgotPassword} />}
+          {isForgotPasswordVisible && <ForgotPassword closeForgotPassword={closeForgotPassword} />}
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/account/*" element={<Account user={userInfo} setUserInfo={setUserInfo} />}>
-            <Route path="like-product" element={<ErrorBoundary><ProductLike /></ErrorBoundary>} />
-            <Route path="info" element={<InfomationAccount user={userInfo} setUserInfo={setUserInfo} />} />
-            <Route path="reset-password" element={<ResetPassWord user={userInfo} />} />
-            <Route path="user-post/" element={<PostOfUser userId={userInfo} />} />
-            {/* <Route
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/account/*" element={<Account user={userInfo} setUserInfo={setUserInfo} />}>
+              <Route path="like-product" element={<ErrorBoundary><ProductLike /></ErrorBoundary>} />
+              <Route path="info" element={<InfomationAccount user={userInfo} setUserInfo={setUserInfo} />} />
+              <Route path="reset-password" element={<ResetPassWord user={userInfo} />} />
+              <Route path="user-post/" element={<PostOfUser userId={userInfo} />} />
+              {/* <Route
               path="cart"
               element={
                 userInfo ? (
@@ -131,15 +139,16 @@ function App() {
               }
             /> */}
 
-          </Route>
-          <Route path="/product-detail" element={<ErrorBoundary><ProductDetail handleLoginClick={handleLoginClick} /></ErrorBoundary>} />
-          <Route path="/new-post" element={<ErrorBoundary><NewPost /></ErrorBoundary>} />
-          <Route path="/update-post" element={<ErrorBoundary><UpdatePost /></ErrorBoundary>} />
-          <Route path="*" element={<ErrorPage />} />
-        </Routes>
-        <Footer />
-      </BrowserRouter>
-    </CartProvider>
+            </Route>
+            <Route path="/product-detail" element={<ErrorBoundary><ProductDetail handleLoginClick={handleLoginClick} /></ErrorBoundary>} />
+            <Route path="/new-post" element={<ErrorBoundary><NewPost /></ErrorBoundary>} />
+            <Route path="/update-post" element={<ErrorBoundary><UpdatePost /></ErrorBoundary>} />
+            <Route path="*" element={<ErrorPage />} />
+          </Routes>
+          <Footer />
+        </BrowserRouter>
+      </CartProvider>
+    </AlertProvider>
   );
 };
 export default App;

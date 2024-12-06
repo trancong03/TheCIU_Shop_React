@@ -4,11 +4,12 @@ import { FaHeart } from "react-icons/fa";
 import { useCart } from "../context/CardContext";
 import { useNavigate } from "react-router-dom";
 import  { getImageProductByID } from "../../../services/apiclient";
+import { useAlert } from "../context/AlertContext";
 
 export default function CartItem({ Product }) {
     const defaultImage = 'default.jpg';
     const navigate = useNavigate();
-    // const { likeProduct, isProductLiked } = useCart();
+    const { likeProduct, isProductLiked, handleAddItem } = useCart();
     const [isLiked, setIsLiked] = useState(false);
     const [images, setImages] = useState([]); // State để lưu hình ảnh
 
@@ -23,17 +24,37 @@ export default function CartItem({ Product }) {
         };
 
         fetchImages();
-    }, [Product.product_id]); // Chỉ chạy khi `Product.product_id` thay đổi
+    }, [Product.product_id]); 
+    
+    // Chỉ chạy khi `Product.product_id` thay đổi
     // Cập nhật trạng thái yêu thích khi thay đổi sản phẩm
     // useEffect(() => {
     //     setIsLiked(isProductLiked(Product.MABAIVIET)); // Đồng bộ trạng thái yêu thích khi sản phẩm thay đổi
     // }, [Product.product_id, isProductLiked]); // Theo dõi sự thay đổi của likeProducts
 
     // Xử lý xem chi tiết sản phẩm
-    const handleViewDetails = () => {
-        navigate("/product-detail", { state: { product: Product, images:images } });
-    };
+    const { showAlert } = useAlert();
+    const handleAddToCart = async () => {
+        try {
+            const username = JSON.parse(localStorage.getItem('userInfo')).username;
 
+            if (username) {
+                const result = await handleAddItem(username, Product.product_id);
+                showAlert("Thêm vào giỏ hàng thành công");
+            }
+            else {
+                console.log("Khong tim thay user");
+                handleLoginClick();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+       
+    };
+    const handleViewDetails = async () => {
+        navigate("/product-detail", { state: { product: Product, images: images } });
+
+    };
     // Xử lý thay đổi trạng thái yêu thích
     const handleToggleLike = () => {
 
@@ -64,7 +85,7 @@ export default function CartItem({ Product }) {
                             </button>
                             <button
                                 className="w-full h-[3rem] transition-colors duration-300   text-white font-bold border rounded-full mt-3 hover:text-yellow-200 hover:border-yellow-200"
-                                onClick={handleViewDetails}
+                                onClick={handleAddToCart}
                             >
                                 <div className="flex items-center justify-center gap-2">
                                     <ShoppingCartIcon />

@@ -85,7 +85,7 @@ export default function Header({ onLoginClick, userInfo, setUserInfo,  }) {
             <Heart />
           </a>
           <a
-            href="#"
+            href="/account/cart"
             onClick={() => setActiveLink("heart")}
             className={`text-[#5b5858cc] relative flex gap-2 items-center  font-arial  px-3 py-2 ${activeLink === "heart"
               ? "text-black font-bold"
@@ -180,7 +180,7 @@ export default function Header({ onLoginClick, userInfo, setUserInfo,  }) {
             {isMenuOpen && (
               <div
                 ref={menuRef}
-                className="absolute top-[8.5vh] mt-2 bg-white border rounded shadow-md w-60 z-50"
+                className="absolute top-[7vh] mt-2 bg-white border rounded shadow-md w-60 z-50"
               >
                 <ul className="space-y-4">
                  

@@ -23,7 +23,6 @@ export default function Home() {
 
     fetchProducts();
   }, []);// Chạy chỉ một lần khi component mount
-  console.log(products);
   
   return (
     <div className=" bg-white">

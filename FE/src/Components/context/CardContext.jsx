@@ -1,5 +1,6 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import { updateCart, deleteCartItem, getCartQuantity, handleAddToCart, } from '../../../services/apiclient';
+import { useAlert } from './AlertContext';
 
 const CartContext = createContext();
 
@@ -8,7 +9,7 @@ export const CartProvider = ({ children, User }) => {
     const [cartItems, setCartItems] = useState({});
     const [selectAll, setSelectAll] = useState(false);
     const [likeProducts, setLikeProducts] = useState([]);
-
+    const { showAlert } = useAlert();
     const fetchCart = async () => {
         try {
             const result = await getCartQuantity(personID);
@@ -44,10 +45,12 @@ export const CartProvider = ({ children, User }) => {
     }, [personID]);
 console.log(cartItems);
 
-    const handleAddItem = (username, product_id, size, color, quantity) => {
+    const handleAddItem = (username, product_id, size = null, color = null, quantity = 1) => {
         handleAddToCart(username, product_id, size, color, quantity)
                 .then(() => {
                     fetchCart();
+                    
+                    showAlert("Thêm sản phẩm thành công")
                 })
                 .catch(error => {
                     console.error("Error add cart item:", error);
@@ -55,20 +58,17 @@ console.log(cartItems);
                 });
     };
     const handleRemoveItem = (id) => {
-        const isConfirmed = window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này?");
 
-        if (isConfirmed) {
             deleteCartItem(id)
                 .then(() => {
                     fetchCart()
+                    showAlert("xóa sản phẩm thành công")
                 })
                 .catch(error => {
                     console.error("Error deleting cart item:", error);
                     alert("Đã có lỗi xảy ra khi xóa sản phẩm.");
                 });
-        } else {
-            alert("Hành động xóa bị hủy.");
-        }
+        
     };
 
 

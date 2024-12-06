@@ -4,7 +4,7 @@ import { FaHeart } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import apiClient, { get_sizes_and_colors, handleAddToCart } from "../../services/apiclient";
 import { useCart } from '../Components/context/CardContext';
-export default function productDetail({ handleLoginClick }) {
+export default function productDetail({  handleLoginClick }) {
     const { state } = useLocation();
     const { product, images } = state || {}; // Lấy product từ state
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -99,7 +99,6 @@ export default function productDetail({ handleLoginClick }) {
             
             if(username){
                 const result = await handleAddItem(username, product.product_id, size.id, color.id, quantity);
-                console.log("add thanh cong");
                 
             }
             else{
