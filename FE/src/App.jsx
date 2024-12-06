@@ -132,7 +132,7 @@ function App() {
             /> */}
 
           </Route>
-          <Route path="/product-detail" element={<ErrorBoundary><ProductDetail /></ErrorBoundary>} />
+          <Route path="/product-detail" element={<ErrorBoundary><ProductDetail handleLoginClick={handleLoginClick} /></ErrorBoundary>} />
           <Route path="/new-post" element={<ErrorBoundary><NewPost /></ErrorBoundary>} />
           <Route path="/update-post" element={<ErrorBoundary><UpdatePost /></ErrorBoundary>} />
           <Route path="*" element={<ErrorPage />} />

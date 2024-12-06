@@ -95,11 +95,13 @@ const get_sizes_and_colors = async (product_id) => {
         return null;
     }
 };
-const handleAddToCart = async (variant_id, username, quantity) => {
+const handleAddToCart = async (username, product_id, size, color, quantity) => {
     try {
         const response = await axios.post('http://127.0.0.1:8000/api/add_to_cart/', {
-            variant_id: variant_id,
             username: username,
+            product_id: product_id,
+            size: size,
+            color: color,
             quantity: quantity
         });
         console.log('Thêm vào giỏ hàng thành công:', response.data);

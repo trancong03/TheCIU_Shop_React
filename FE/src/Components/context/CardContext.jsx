@@ -12,41 +12,49 @@ export const CartProvider = ({ children, User }) => {
     const fetchCart = async () => {
         try {
             const result = await getCartQuantity(personID);
-            if (result.data.cart_items) {
-                const updatedCartItems = result.data.cart_items.map(item => ({
+
+            // Kiểm tra result.data trước khi xử lý
+            if (result && result.data) {
+                const cartItems = result.data.cart_items || []; // Đảm bảo cart_items là mảng
+                const updatedCartItems = cartItems.map(item => ({
                     ...item,
                     selected: false, // Default selected field
                 }));
-                setCartItems({ ...result.data, cart_items: updatedCartItems });
-            } 
+
+                // Cập nhật state
+                setCartItems({
+                    ...result.data,
+                    total_quantity: cartItems.length, // Tổng số lượng sản phẩm
+                    cart_items: updatedCartItems,
+                });
+            } else {
+                console.warn('Cart data is empty or undefined');
+                setCartItems({ total_quantity: 0, cart_items: [] });
+            }
         } catch (error) {
             console.error('Error while fetching cart:', error);
         }
     };
+
 
     useEffect(() => {
         if (personID) {
             fetchCart();
         }
     }, [personID]);
+console.log(cartItems);
 
-    const handleRemoveItem = (id) => {
-        const isConfirmed = window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này?");
-
-        if (isConfirmed) {
-            deleteCartItem(id)
+    const handleAddItem = (username, product_id, size, color, quantity) => {
+        handleAddToCart(username, product_id, size, color, quantity)
                 .then(() => {
-                    fetchCart()
+                    fetchCart();
                 })
                 .catch(error => {
-                    console.error("Error deleting cart item:", error);
+                    console.error("Error add cart item:", error);
                     alert("Đã có lỗi xảy ra khi xóa sản phẩm.");
                 });
-        } else {
-            alert("Hành động xóa bị hủy.");
-        }
     };
-    const handleAddItem = (variant_id, username,quantity) => {
+    const handleRemoveItem = (id) => {
         const isConfirmed = window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này?");
 
         if (isConfirmed) {
@@ -112,7 +120,7 @@ export const CartProvider = ({ children, User }) => {
             return total;
         }, 0);
     };
-
+    
     return (
         <CartContext.Provider value={{
             cartItems,
@@ -123,7 +131,8 @@ export const CartProvider = ({ children, User }) => {
             handleToggleSelectAll,
             handleToggleSelectItem,
             calculateTotal,
-            fetchCart
+            fetchCart,
+            handleAddItem,
         }}>
             {children}
         </CartContext.Provider>

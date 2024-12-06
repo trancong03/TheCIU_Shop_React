@@ -2,8 +2,9 @@ import { ShoppingCartIcon } from 'lucide-react';
 import { useEffect, useState } from "react";
 import { FaHeart } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
-import apiClient, { get_sizes_and_colors } from "../../services/apiclient";
-export default function productDetail() {
+import apiClient, { get_sizes_and_colors, handleAddToCart } from "../../services/apiclient";
+import { useCart } from '../Components/context/CardContext';
+export default function productDetail({ handleLoginClick }) {
     const { state } = useLocation();
     const { product, images } = state || {}; // Lấy product từ state
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -89,8 +90,27 @@ export default function productDetail() {
             setQuantity(quantity - 1);
         }
     };
-    console.log(variant);
-    
+    const {
+        handleAddItem
+    } = useCart();
+    const handleAddCart= async() =>{
+        try{
+            const username = JSON.parse(localStorage.getItem('userInfo')).username;
+            
+            if(username){
+                const result = await handleAddItem(username, product.product_id, size.id, color.id, quantity);
+                console.log("add thanh cong");
+                
+            }
+            else{
+                console.log("Khong tim thay user");
+                handleLoginClick();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }    
+   
     return (
         <div className ="flex items-center justify-center">
             <div className="flex  max-w-[100%] items-center justify-center ml-[10%]  mr-[10%] bg-white">
@@ -221,7 +241,7 @@ export default function productDetail() {
                         </button>
                         <button
                             className="w-full h-[3rem] transition-colors duration-300   text-black font-bold border rounded-full  hover:text-yellow-200 hover:border-yellow-200"
-                            // onClick={handleViewDetails}
+                            onClick={handleAddCart}
                         >
                             <div className="flex items-center justify-center gap-2">
                                 <ShoppingCartIcon />
