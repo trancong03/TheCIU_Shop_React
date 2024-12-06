@@ -46,6 +46,22 @@ export const CartProvider = ({ children, User }) => {
             alert("Hành động xóa bị hủy.");
         }
     };
+    const handleAddItem = (variant_id, username,quantity) => {
+        const isConfirmed = window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này?");
+
+        if (isConfirmed) {
+            deleteCartItem(id)
+                .then(() => {
+                    fetchCart()
+                })
+                .catch(error => {
+                    console.error("Error deleting cart item:", error);
+                    alert("Đã có lỗi xảy ra khi xóa sản phẩm.");
+                });
+        } else {
+            alert("Hành động xóa bị hủy.");
+        }
+    };
 
 
     const handleUpdateQuantity = (cart_id, product_id, size_id, color_id, newQuantity) => {

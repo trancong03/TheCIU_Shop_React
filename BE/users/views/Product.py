@@ -61,10 +61,13 @@ def add_to_cart(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
-            variant_id = data.get("variant_id")
-            username = data.get("username")
+            cart_id = data.get("cart_id")
+            product_id = data.get("product_id")
+            size = data.get("size")
+            color = data.get("color")
             quantity = data.get("quantity")
-            query_result = ProductRepository.add_product_to_cart(variant_id,username,quantity)
+            username = data.get("username")
+            query_result = ProductRepository.add_product_to_cart(cart_id,username,product_id,size,color,quantity)
             if query_result:  # Nếu có kết quả trả về
                 return JsonResponse(query_result, status=200)
             else:  # Nếu không có kết quả trả về
