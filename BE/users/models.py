@@ -112,13 +112,12 @@ class ProductVariant(models.Model):
         db_table = 'ProductVariants'
 
 class FavoriteProduct(models.Model):
-    username = models.CharField(max_length=255)
-    product_id = models.IntegerField()
-    # Đảm bảo sự kết hợp của username và product là duy nhất
+    id = models.AutoField(primary_key=True)
+    username = models.CharField(max_length=255)  # Tên người dùng
+    product_id = models.IntegerField() # Quan hệ One-to-Many với Product
+
     class Meta:
         db_table = 'FavoriteProduct'
-       
-
 
        
 

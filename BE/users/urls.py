@@ -28,6 +28,6 @@ urlpatterns = [
     path('get_sizes_and_colors/', Product.get_sizes_and_colors, name='get_sizes_and_colors'),
     path('get_cart_quantity/<str:username>/', Product.get_cart_quantity, name='get_sizes_and_colors'),
     path('delete-cart-item/', Product.delete_cart_item, name='delete_cart_item'),
-    #path('toggle-favorite/<str:username>/<int:product_id>/', Product.toggle_favorite, name='toggle_favorite'),
+    path('toggle-favorite/<str:username>/<int:product_id>/', Product.toggle_favorite, name='toggle_favorite'),
     path('favorite-products/<str:username>/', Product.get_favorite_products, name='get_favorite_products'),
 ]

@@ -184,46 +184,55 @@ def get_sizes_and_colors(request):
             return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
     else:
         return JsonResponse({"error": "Invalid request method"}, status=405)
+
 @csrf_exempt
 def get_favorite_products(request, username):
     try:
-        # Kiểm tra xem người dùng có tồn tại không
-        favorite_products = FavoriteProduct.objects.get(username=username)
-        
-        # Assuming FavoriteProduct has a foreign key to Product
-        products_list = list(favorite_products.products.values())  # Adjust according to your model
+        # Lấy tất cả các đối tượng FavoriteProduct của người dùng
+        favorite_products = FavoriteProduct.objects.filter(username=username)
+
+        # Kiểm tra nếu không có sản phẩm yêu thích nào
+        if not favorite_products.exists():
+            return JsonResponse({"data": []}, status=200)  # Trả về danh sách rỗng nếu không có sản phẩm yêu thích
+
+        # Tạo danh sách chứa các sản phẩm yêu thích
+        products_list = []
+        for favorite in favorite_products:
+            product_id = favorite.product_id  # Truy cập sản phẩm yêu thích qua trường product
+            if product_id:  # Kiểm tra nếu sản phẩm tồn tại
+                try:
+                    # Lấy thông tin sản phẩm
+                    product = Product.objects.get(product_id=product_id)
+                    # Chuyển đối tượng Product thành dictionary chứa tất cả các thuộc tính
+                    product_data = model_to_dict(product)
+                    products_list.append(product_data)
+                except Product.DoesNotExist:
+                    # Nếu sản phẩm không tồn tại, bỏ qua
+                    continue
 
         return JsonResponse({"data": products_list}, safe=False, status=200)
 
-    except FavoriteProduct.DoesNotExist:
-        return JsonResponse({"error": "User not found."}, status=404)
     except Exception as e:
         # Xử lý lỗi chung
         return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
 
-# @csrf_exempt
-# def toggle_favorite(request, username, product_id):
-#     try:
-#         # Kiểm tra xem người dùng và sản phẩm có tồn tại không
-#         user = Account.objects.get(username=username)
-#         product = Product.objects.get(product_id=product_id)
+@csrf_exempt
+def toggle_favorite(request, username, product_id):
+    try:
+        # Kiểm tra xem sản phẩm có tồn tại không
+        favorite = FavoriteProduct.objects.filter(username=username, product_id=product_id)
 
-#         # Kiểm tra xem sản phẩm có trong danh sách yêu thích không
-#         favorite = FavoriteProduct.objects.filter(username=user, product=product)
+        if favorite.exists():
+            # Nếu sản phẩm đã có trong danh sách yêu thích, xóa nó
+            favorite.delete()
+            return JsonResponse({"message": "Product removed from favorites."}, status=200)
+        else:
+            # Nếu sản phẩm chưa có trong danh sách yêu thích, thêm nó
+            FavoriteProduct.objects.create(username=username, product_id=product_id)
+            return JsonResponse({"message": "Product added to favorites."}, status=200)
 
-#         if favorite.exists():
-#             # Nếu sản phẩm đã có trong danh sách yêu thích, xóa nó
-#             favorite.delete()
-#             return JsonResponse({"message": "Product removed from favorites."}, status=200)
-#         else:
-#             # Nếu sản phẩm chưa có trong danh sách yêu thích, thêm nó
-#             FavoriteProduct.objects.create(username=user, product=product)
-#             return JsonResponse({"message": "Product added to favorites."}, status=200)
-
-#     except Account.DoesNotExist:
-#         return JsonResponse({"error": "User not found."}, status=404)
-#     except Product.DoesNotExist:
-#         return JsonResponse({"error": "Product not found."}, status=404)
-#     except Exception as e:
-#         # Xử lý lỗi chung
-#         return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
+    except Product.DoesNotExist:
+        return JsonResponse({"error": "Product not found."}, status=404)
+    except Exception as e:
+        # Xử lý lỗi chung
+        return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
